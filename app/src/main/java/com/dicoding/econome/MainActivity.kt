@@ -4,14 +4,18 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.Room
 import com.dicoding.econome.databinding.ActivityMainBinding
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var transactions: ArrayList<Transaction>
+    private lateinit var transactions: List<Transaction>
     private lateinit var transactionAdapter: TransactionAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,20 +25,13 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.background = null
         binding.bottomNavigationView.menu.getItem(2).isEnabled = false
 
-        transactions = arrayListOf(
-            Transaction("Gaji Bulanan", 10000000.00),
-            Transaction("Bayar Kost", -2000000.00),
-            Transaction("Beli Makanan", -50000.00),
-            Transaction("Beli Baju", -100000.00),
-            Transaction("Bayar Listrik", -200000.00),
-            Transaction("Bayar Air", -100000.00),
-            Transaction("Bayar Internet", -200000.00),
-            Transaction("Bayar TV Kabel", -100000.00),
-            Transaction("Bayar Asuransi", -500000.00),
-            Transaction("Bayar Pajak", -1000000.00),
-        )
+        transactions = arrayListOf()
+
         transactionAdapter = TransactionAdapter(transactions)
         linearLayoutManager = LinearLayoutManager(this)
+
+        db = Room.databaseBuilder(this, AppDatabase::class.java, "transactions")
+            .build()
 
         binding.rvTransactions.apply {
             adapter = transactionAdapter
@@ -42,21 +39,35 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        updateDashboard()
-
         binding.addTransactionFAB.setOnClickListener {
             val intent = Intent(this, AddTransactionActivity::class.java)
             startActivity(intent)
         }
     }
 
-    private fun updateDashboard(){
+    private fun fetchAll() {
+        GlobalScope.launch {
+            transactions = db.transactionDao().getAll()
+
+            runOnUiThread {
+                updateDashboard()
+                transactionAdapter.setData(transactions)
+            }
+        }
+    }
+
+    private fun updateDashboard() {
         val balanceAmount = transactions.sumOf { it.amount }
         val incomeAmount = transactions.filter { it.amount > 0 }.sumOf { it.amount }
         val expenseAmount = balanceAmount - incomeAmount
 
-        binding.tvBalanceAmount.text = "Rp %.2f".format(balanceAmount)
-        binding.tvIncomeAmount.text = "Rp %.2f".format(incomeAmount)
-        binding.tvExpenseAmount.text = "Rp %.2f".format(expenseAmount)
+        binding.tvBalanceAmount.text = "Rp %.0f".format(balanceAmount)
+        binding.tvIncomeAmount.text = "Rp %.0f".format(incomeAmount)
+        binding.tvExpenseAmount.text = "Rp %.0f".format(expenseAmount)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fetchAll()
     }
 }
