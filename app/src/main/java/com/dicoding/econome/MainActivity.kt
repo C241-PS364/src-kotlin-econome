@@ -1,5 +1,6 @@
 package com.dicoding.econome
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,7 +41,13 @@ class MainActivity : AppCompatActivity() {
             layoutManager = this@MainActivity.linearLayoutManager
         }
 
+
         updateDashboard()
+
+        binding.addTransactionFAB.setOnClickListener {
+            val intent = Intent(this, AddTransactionActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun updateDashboard(){

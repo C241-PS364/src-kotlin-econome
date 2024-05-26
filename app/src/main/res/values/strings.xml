@@ -16,4 +16,8 @@
     <string name="income_title">Income</string>
     <string name="expense_title">expense</string>
     <string name="transactions_history">Transactions</string>
+    <string name="label">Label</string>
+    <string name="amount">Amount</string>
+    <string name="description">Description</string>
+    <string name="add_transaction">Add Transaction</string>
 </resources>

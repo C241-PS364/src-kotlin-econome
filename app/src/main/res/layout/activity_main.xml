@@ -118,8 +118,7 @@
             android:id="@+id/rvTransactions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            app:layout_constraintTop_toBottomOf="@+id/rvTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/rvTitle"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.bottomappbar.BottomAppBar
@@ -140,7 +139,7 @@
     </com.google.android.material.bottomappbar.BottomAppBar>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/addTransactionFAB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/add_expense"
