@@ -9,4 +9,11 @@
     <string name="empty">Empty</string>
     <string name="add_item">Add Expense</string>
     <string name="add_expense">Add Expense</string>
+    <string name="balance">Total Balance</string>
+    <string name="balance_amount">Rp10.000</string>
+    <string name="income">Rp15.000</string>
+    <string name="expense">Rp5.000</string>
+    <string name="income_title">Income</string>
+    <string name="expense_title">expense</string>
+    <string name="transactions_history">Transactions</string>
 </resources>
