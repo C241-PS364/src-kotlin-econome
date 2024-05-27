@@ -31,14 +31,13 @@ class AddIncomeActivity : AppCompatActivity() {
 
         binding.addIncomeButton.setOnClickListener {
             val label = binding.labelInput.text.toString()
-            val description = binding.descInput.text.toString()
             val amount = binding.amountInput.text.toString().toDoubleOrNull()
             if (label.isEmpty())
                 binding.labelLayout.error = "Label cannot be empty"
             else if (amount == null)
                 binding.amountLayout.error = "Please enter a valid amount"
             else {
-                val transaction = Transaction(0, label, amount, description)
+                val transaction = Transaction(0, label, amount)
                 insert(transaction)
             }
         }

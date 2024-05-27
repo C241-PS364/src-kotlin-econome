@@ -30,7 +30,6 @@ class AddTransactionActivity : AppCompatActivity() {
 
         binding.addTransactionButton.setOnClickListener {
             val label = binding.labelInput.text.toString()
-            val description = binding.descInput.text.toString()
             var amount = binding.amountInput.text.toString().toDoubleOrNull()
             if (label.isEmpty())
                 binding.labelLayout.error = "Label cannot be empty"
@@ -38,7 +37,7 @@ class AddTransactionActivity : AppCompatActivity() {
                 binding.amountLayout.error = "Please enter a valid amount"
             else{
                 amount = -Math.abs(amount)
-                val transaction = Transaction(0,label,amount,description)
+                val transaction = Transaction(0,label,amount)
                 insert(transaction)
             }
         }
