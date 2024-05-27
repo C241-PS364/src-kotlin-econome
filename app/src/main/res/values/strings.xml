@@ -20,5 +20,4 @@
     <string name="amount">Amount</string>
     <string name="description">Description</string>
     <string name="add_transaction">Add Transaction</string>
-    <string name="update_transaction">Update Transaction</string>
 </resources>

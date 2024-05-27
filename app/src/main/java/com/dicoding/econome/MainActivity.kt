@@ -28,6 +28,27 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.miHome -> {
+                    true
+                }
+                R.id.miWallet -> {
+                    startActivity(Intent(this, TransactionActivity::class.java))
+                    true
+                }
+                R.id.miReport -> {
+                    startActivity(Intent(this, ReportActivity::class.java))
+                    true
+                }
+                R.id.miPerson -> {
+                    startActivity(Intent(this, ProfileActivity::class.java))
+                    true
+                }
+                else -> false
+            }
+        }
+
         binding.bottomNavigationView.background = null
         binding.bottomNavigationView.menu.getItem(2).isEnabled = false
 
