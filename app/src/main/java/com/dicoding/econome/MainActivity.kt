@@ -1,5 +1,6 @@
 package com.dicoding.econome
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -23,30 +24,29 @@ class MainActivity : AppCompatActivity() {
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var db: AppDatabase
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.bottomNavigationView.selectedItemId = R.id.miHome
+
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.miHome -> {
-                    true
-                }
-                R.id.miWallet -> {
-                    startActivity(Intent(this, TransactionActivity::class.java))
-                    true
-                }
-                R.id.miReport -> {
-                    startActivity(Intent(this, ReportActivity::class.java))
-                    true
-                }
-                R.id.miPerson -> {
-                    startActivity(Intent(this, ProfileActivity::class.java))
-                    true
-                }
-                else -> false
+            val intent = when (item.itemId) {
+                R.id.miHome -> Intent(this, MainActivity::class.java)
+                R.id.miWallet -> Intent(this, TransactionActivity::class.java)
+                R.id.miReport -> Intent(this, ReportActivity::class.java)
+                R.id.miPerson -> Intent(this, ProfileActivity::class.java)
+                else -> null
             }
+
+            intent?.let {
+                val options = ActivityOptions.makeCustomAnimation(this, 0, 0).toBundle()
+                startActivity(it, options)
+            }
+
+            true
         }
 
         binding.bottomNavigationView.background = null
