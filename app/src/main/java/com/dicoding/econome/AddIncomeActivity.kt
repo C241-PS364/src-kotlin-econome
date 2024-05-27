@@ -16,7 +16,6 @@ class AddIncomeActivity : AppCompatActivity() {
         binding = ActivityAddIncomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Set inputType to numberDecimal to remove minus sign
         binding.amountInput.inputType =
             InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
 
@@ -39,7 +38,6 @@ class AddIncomeActivity : AppCompatActivity() {
             else if (amount == null)
                 binding.amountLayout.error = "Please enter a valid amount"
             else {
-                // For income, amount is positive
                 val transaction = Transaction(0, label, amount, description)
                 insert(transaction)
             }
