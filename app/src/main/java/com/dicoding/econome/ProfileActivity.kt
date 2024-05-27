@@ -35,5 +35,15 @@ class ProfileActivity : AppCompatActivity() {
         binding.bottomNavigationView.background = null
         binding.bottomNavigationView.menu.getItem(2).isEnabled = false
 
+        binding.addTransactionFAB.setOnClickListener {
+            val intent = Intent(this, AddTransactionActivity::class.java)
+            startActivity(intent)
+
+        }
+
+        binding.addIncomeButton.setOnClickListener {
+            val intent = Intent(this, AddIncomeActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
