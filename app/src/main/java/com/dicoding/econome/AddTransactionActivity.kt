@@ -2,9 +2,10 @@ package com.dicoding.econome
 
 import android.os.Bundle
 import android.text.InputType
+import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
-import androidx.room.Room
 import com.dicoding.econome.databinding.ActivityAddTransactionBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -28,16 +29,23 @@ class AddTransactionActivity : AppCompatActivity() {
                 binding.amountLayout.error = null
         }
 
+        val categories = arrayOf("Entertainment", "Food", "Health and Beauty", "Housing", "Investment", "Miscellaneous", "Transportation")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categories)
+        binding.categoryInput.setAdapter(adapter)
+
         binding.addTransactionButton.setOnClickListener {
             val label = binding.labelInput.text.toString()
             var amount = binding.amountInput.text.toString().toDoubleOrNull()
-            if (label.isEmpty())
-                binding.labelLayout.error = "Label cannot be empty"
+            val category = binding.categoryInput.text.toString()
+            if (category.isEmpty())
+                Toast.makeText(this,"Category cannot be empty", Toast.LENGTH_SHORT).show()
+            else if (!categories.contains(category))
+                Toast.makeText(this,"Please select a valid category", Toast.LENGTH_SHORT).show()
             else if (amount == null)
-                binding.amountLayout.error = "Please enter a valid amount"
-            else{
-                amount = -Math.abs(amount)
-                val transaction = Transaction(0,label,amount)
+                Toast.makeText(this,"Please enter a valid amount", Toast.LENGTH_SHORT).show()
+            else {
+                amount = -Math.abs(amount!!)
+                val transaction = Transaction(0,label,amount, category)
                 insert(transaction)
             }
         }
@@ -47,8 +55,7 @@ class AddTransactionActivity : AppCompatActivity() {
     }
 
     private fun insert(transaction: Transaction) {
-        val db = Room.databaseBuilder(this, AppDatabase::class.java, "transactions")
-            .build()
+        val db = AppDatabase.getDatabase(this)
 
         GlobalScope.launch {
             db.transactionDao().insertAll(transaction)

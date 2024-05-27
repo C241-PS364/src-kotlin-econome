@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.text.InputType
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
-import androidx.room.Room
 import com.dicoding.econome.databinding.ActivityAddIncomeBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -47,8 +46,7 @@ class AddIncomeActivity : AppCompatActivity() {
     }
 
     private fun insert(transaction: Transaction) {
-        val db = Room.databaseBuilder(this, AppDatabase::class.java, "transactions")
-            .build()
+        val db = AppDatabase.getDatabase(this)
 
         GlobalScope.launch {
             db.transactionDao().insertAll(transaction)

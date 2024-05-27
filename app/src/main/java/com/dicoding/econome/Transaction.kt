@@ -8,7 +8,8 @@ data class Transaction(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val label: String,
-    val amount: Double
+    val amount: Double,
+    val category: String = ""
 ) {
 
 }
