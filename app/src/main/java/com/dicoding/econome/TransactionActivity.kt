@@ -103,7 +103,7 @@ class TransactionActivity : AppCompatActivity() {
     private fun updateDashboard() {
         val balanceAmount = transactions.sumOf { it.amount }
         val incomeAmount = transactions.filter { it.amount > 0 }.sumOf { it.amount }
-        val expenseAmount = balanceAmount - incomeAmount
+        val expenseAmount = transactions.filter { it.amount < 0 }.sumOf { -it.amount}
 
         binding.tvBalanceAmount.text = "Rp %.0f".format(balanceAmount)
         binding.tvIncomeAmount.text = "Rp %.0f".format(incomeAmount)

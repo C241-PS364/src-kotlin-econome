@@ -39,9 +39,8 @@ class TransactionAdapter(private var transactions: List<Transaction>) :
         val categoryIconRes = when (transaction.category) {
             "Entertainment" -> R.drawable.ic_entertainment
             "Food" -> R.drawable.ic_food
-            "Health" -> R.drawable.ic_health
+            "Health and Beauty" -> R.drawable.ic_health
             "Housing" -> R.drawable.ic_housing
-            "Investment" -> R.drawable.ic_investment
             "Other" -> R.drawable.ic_other
             "Transportation" -> R.drawable.ic_transportation
             else -> R.drawable.ic_other

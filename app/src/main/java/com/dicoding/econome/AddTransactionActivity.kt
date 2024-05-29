@@ -17,7 +17,8 @@ class AddTransactionActivity : AppCompatActivity() {
         binding = ActivityAddTransactionBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.amountInput.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
+        binding.amountInput.inputType =
+            InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL
 
         binding.labelInput.doOnTextChanged { text, _, _, _ ->
             if (text != null && text.count() > 0)
@@ -29,7 +30,14 @@ class AddTransactionActivity : AppCompatActivity() {
                 binding.amountLayout.error = null
         }
 
-        val categories = arrayOf("Entertainment", "Food", "Health and Beauty", "Housing", "Investment", "Miscellaneous", "Transportation")
+        val categories = arrayOf(
+            "Entertainment",
+            "Food",
+            "Health and Beauty",
+            "Housing",
+            "Transportation",
+            "Other"
+        )
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categories)
         binding.categoryInput.setAdapter(adapter)
 
@@ -38,14 +46,14 @@ class AddTransactionActivity : AppCompatActivity() {
             var amount = binding.amountInput.text.toString().toDoubleOrNull()
             val category = binding.categoryInput.text.toString()
             if (category.isEmpty())
-                Toast.makeText(this,"Category cannot be empty", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Category cannot be empty", Toast.LENGTH_SHORT).show()
             else if (!categories.contains(category))
-                Toast.makeText(this,"Please select a valid category", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please select a valid category", Toast.LENGTH_SHORT).show()
             else if (amount == null)
-                Toast.makeText(this,"Please enter a valid amount", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please enter a valid amount", Toast.LENGTH_SHORT).show()
             else {
                 amount = -Math.abs(amount!!)
-                val transaction = Transaction(0,label,amount, category)
+                val transaction = Transaction(0, label, amount, category)
                 insert(transaction)
             }
         }
