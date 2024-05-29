@@ -9,6 +9,9 @@ import androidx.core.widget.doOnTextChanged
 import com.dicoding.econome.databinding.ActivityAddTransactionBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class AddTransactionActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddTransactionBinding
@@ -41,10 +44,12 @@ class AddTransactionActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categories)
         binding.categoryInput.setAdapter(adapter)
 
+        // Update AddTransactionActivity
         binding.addTransactionButton.setOnClickListener {
             val label = binding.labelInput.text.toString()
             var amount = binding.amountInput.text.toString().toDoubleOrNull()
             val category = binding.categoryInput.text.toString()
+            val currentDate = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date()) // get current date
             if (category.isEmpty())
                 Toast.makeText(this, "Category cannot be empty", Toast.LENGTH_SHORT).show()
             else if (!categories.contains(category))
@@ -53,7 +58,7 @@ class AddTransactionActivity : AppCompatActivity() {
                 Toast.makeText(this, "Please enter a valid amount", Toast.LENGTH_SHORT).show()
             else {
                 amount = -Math.abs(amount!!)
-                val transaction = Transaction(0, label, amount, category)
+                val transaction = Transaction(0, label, amount, category, date = currentDate) // include date
                 insert(transaction)
             }
         }

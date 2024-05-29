@@ -7,6 +7,9 @@ import androidx.core.widget.doOnTextChanged
 import com.dicoding.econome.databinding.ActivityAddIncomeBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class AddIncomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddIncomeBinding
@@ -28,15 +31,17 @@ class AddIncomeActivity : AppCompatActivity() {
                 binding.amountLayout.error = null
         }
 
+        // Update AddIncomeActivity
         binding.addIncomeButton.setOnClickListener {
             val label = binding.labelInput.text.toString()
             val amount = binding.amountInput.text.toString().toDoubleOrNull()
+            val currentDate = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date()) // get current date
             if (label.isEmpty())
                 binding.labelLayout.error = "Label cannot be empty"
             else if (amount == null)
                 binding.amountLayout.error = "Please enter a valid amount"
             else {
-                val transaction = Transaction(0, label, amount)
+                val transaction = Transaction(0, label, amount, date = currentDate) // include date
                 insert(transaction)
             }
         }

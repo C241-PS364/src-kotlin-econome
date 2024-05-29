@@ -14,6 +14,7 @@ class TransactionAdapter(private var transactions: List<Transaction>) :
         val label: TextView = view.findViewById(R.id.label)
         val amount: TextView = view.findViewById(R.id.amount)
         val categoryIcon: ImageView = view.findViewById(R.id.category_icon)
+        val date: TextView = view.findViewById(R.id.date)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
@@ -46,6 +47,7 @@ class TransactionAdapter(private var transactions: List<Transaction>) :
             else -> R.drawable.ic_other
         }
         holder.categoryIcon.setImageResource(categoryIconRes)
+        holder.date.text = transaction.date
     }
 
     override fun getItemCount(): Int {
