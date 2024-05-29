@@ -13,22 +13,22 @@
         android:theme="@style/Base.Theme.EconoMe"
         tools:targetApi="31">
         <activity
-            android:name=".AddIncomeActivity"
+            android:name=".activity.AddIncomeActivity"
             android:exported="false" />
         <activity
-            android:name=".ProfileActivity"
+            android:name=".activity.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".ReportActivity"
+            android:name=".activity.ReportActivity"
             android:exported="false" />
         <activity
-            android:name=".TransactionActivity"
+            android:name=".activity.TransactionActivity"
             android:exported="false" />
         <activity
-            android:name=".AddTransactionActivity"
+            android:name=".activity.AddTransactionActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

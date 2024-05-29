@@ -1,4 +1,4 @@
-package com.dicoding.econome
+package com.dicoding.econome.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.dicoding.econome.R
+import com.dicoding.econome.database.entity.Transaction
 
 class TransactionAdapter(private var transactions: List<Transaction>) :
     RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {

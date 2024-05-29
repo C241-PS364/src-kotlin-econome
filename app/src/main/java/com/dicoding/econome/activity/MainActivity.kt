@@ -1,9 +1,10 @@
-package com.dicoding.econome
+package com.dicoding.econome.activity
 
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.dicoding.econome.R
 import com.dicoding.econome.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

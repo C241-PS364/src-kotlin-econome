@@ -5,4 +5,11 @@
     <color name="red">#F44336</color>
     <color name="green">#4CAF50</color>
     <color name="grey">#919191</color>
+
+    <color name="colorEntertainment">#FF6347</color>
+    <color name="colorFood">#ADFF2F</color>
+    <color name="colorHealth">#FFD700</color>
+    <color name="colorHousing">#1E90FF</color>
+    <color name="colorOther">#8A2BE2</color>
+    <color name="colorTransportation">#DC143C</color>
 </resources>

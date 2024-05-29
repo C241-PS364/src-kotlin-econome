@@ -1,20 +1,20 @@
-package com.dicoding.econome
+package com.dicoding.econome.activity
 
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.dicoding.econome.databinding.ActivityReportBinding
+import com.dicoding.econome.R
+import com.dicoding.econome.databinding.ActivityProfileBinding
 
-class ReportActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityReportBinding
-
+class ProfileActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityProfileBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityReportBinding.inflate(layoutInflater)
+        binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.bottomNavigationView.selectedItemId = R.id.miReport
+        binding.bottomNavigationView.selectedItemId = R.id.miPerson
 
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             val intent = when (item.itemId) {
@@ -38,6 +38,12 @@ class ReportActivity : AppCompatActivity() {
 
         binding.addTransactionFAB.setOnClickListener {
             val intent = Intent(this, AddTransactionActivity::class.java)
+            startActivity(intent)
+
+        }
+
+        binding.addIncomeButton.setOnClickListener {
+            val intent = Intent(this, AddIncomeActivity::class.java)
             startActivity(intent)
         }
     }

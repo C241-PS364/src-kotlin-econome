@@ -1,4 +1,4 @@
-package com.dicoding.econome
+package com.dicoding.econome.activity
 
 import android.app.ActivityOptions
 import android.content.Intent
@@ -9,6 +9,10 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
+import com.dicoding.econome.database.AppDatabase
+import com.dicoding.econome.R
+import com.dicoding.econome.database.entity.Transaction
+import com.dicoding.econome.adapter.TransactionAdapter
 import com.dicoding.econome.databinding.ActivityTransactionBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.GlobalScope

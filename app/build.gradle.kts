@@ -35,7 +35,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    viewBinding{
+    viewBinding {
         enable = true
     }
 }
@@ -50,6 +50,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+
+    implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
 
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
