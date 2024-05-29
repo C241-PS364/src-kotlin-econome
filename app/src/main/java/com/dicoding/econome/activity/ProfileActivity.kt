@@ -39,12 +39,6 @@ class ProfileActivity : AppCompatActivity() {
         binding.addTransactionFAB.setOnClickListener {
             val intent = Intent(this, AddTransactionActivity::class.java)
             startActivity(intent)
-
-        }
-
-        binding.addIncomeButton.setOnClickListener {
-            val intent = Intent(this, AddIncomeActivity::class.java)
-            startActivity(intent)
         }
     }
 }

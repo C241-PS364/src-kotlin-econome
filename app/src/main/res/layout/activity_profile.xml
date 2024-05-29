@@ -40,10 +40,5 @@
         app:layout_anchor="@+id/bottomAppBar"
         app:layout_anchorGravity="top|center" />
 
-    <Button
-        android:id="@+id/addIncomeButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/add_income" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
