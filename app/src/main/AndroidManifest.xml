@@ -19,7 +19,7 @@
             android:name=".activity.ProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.ReportActivity"
+            android:name=".activity.StatisticsActivity"
             android:exported="false" />
         <activity
             android:name=".activity.TransactionActivity"

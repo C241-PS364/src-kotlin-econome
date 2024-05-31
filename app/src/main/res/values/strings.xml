@@ -22,4 +22,6 @@
     <string name="add_transaction">Add Transaction</string>
     <string name="add_income">Add Income</string>
     <string name="category_icon">Icon Category</string>
+    <string name="statistics">Statistics</string>
+    <string name="profile">Profile</string>
 </resources>

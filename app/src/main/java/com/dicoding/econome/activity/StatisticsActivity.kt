@@ -5,16 +5,17 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.dicoding.econome.R
-import com.dicoding.econome.databinding.ActivityProfileBinding
+import com.dicoding.econome.databinding.ActivityStatisticsBinding
 
-class ProfileActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityProfileBinding
+class StatisticsActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityStatisticsBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityProfileBinding.inflate(layoutInflater)
+        binding = ActivityStatisticsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.bottomNavigationView.selectedItemId = R.id.miProfile
+        binding.bottomNavigationView.selectedItemId = R.id.miStatistics
 
         binding.bottomNavigationView.setOnItemSelectedListener { item ->
             val intent = when (item.itemId) {

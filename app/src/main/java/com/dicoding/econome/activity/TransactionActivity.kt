@@ -37,8 +37,8 @@ class TransactionActivity : AppCompatActivity() {
             val intent = when (item.itemId) {
                 R.id.miHome -> Intent(this, MainActivity::class.java)
                 R.id.miWallet -> Intent(this, TransactionActivity::class.java)
-                R.id.miReport -> Intent(this, ReportActivity::class.java)
-                R.id.miPerson -> Intent(this, ProfileActivity::class.java)
+                R.id.miStatistics -> Intent(this, StatisticsActivity::class.java)
+                R.id.miProfile -> Intent(this, ProfileActivity::class.java)
                 else -> null
             }
 
@@ -98,21 +98,11 @@ class TransactionActivity : AppCompatActivity() {
             transactions = db.transactionDao().getAll()
 
             runOnUiThread {
-                updateDashboard()
                 transactionAdapter.setData(transactions)
             }
         }
     }
 
-    private fun updateDashboard() {
-        val balanceAmount = transactions.sumOf { it.amount }
-        val incomeAmount = transactions.filter { it.amount > 0 }.sumOf { it.amount }
-        val expenseAmount = transactions.filter { it.amount < 0 }.sumOf { -it.amount}
-
-        binding.tvBalanceAmount.text = "Rp %.0f".format(balanceAmount)
-        binding.tvIncomeAmount.text = "Rp %.0f".format(incomeAmount)
-        binding.tvExpenseAmount.text = "Rp %.0f".format(expenseAmount)
-    }
 
     private fun undoDelete(){
         GlobalScope.launch {
@@ -120,7 +110,6 @@ class TransactionActivity : AppCompatActivity() {
             transactions = oldTransactions
             runOnUiThread {
                 transactionAdapter.setData(transactions)
-                updateDashboard()
             }
         }
     }
@@ -146,7 +135,6 @@ class TransactionActivity : AppCompatActivity() {
 
             transactions = transactions.filter { it.id != transaction.id }
             runOnUiThread {
-                updateDashboard()
                 transactionAdapter.setData(transactions)
                 showSnackbar()
             }
