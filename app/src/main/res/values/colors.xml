@@ -6,10 +6,12 @@
     <color name="green">#4CAF50</color>
     <color name="grey">#919191</color>
 
-    <color name="colorEntertainment">#FF6347</color>
-    <color name="colorFood">#ADFF2F</color>
-    <color name="colorHealth">#FFD700</color>
-    <color name="colorHousing">#1E90FF</color>
-    <color name="colorOther">#8A2BE2</color>
-    <color name="colorTransportation">#DC143C</color>
+    <color name="colorFood">#FFA726</color>
+    <color name="colorOther">#FF7043</color>
+    <color name="colorHealth">#66BB6A</color>
+    <color name="colorTransportation">#42A5F5</color>
+    <color name="colorHousing">#8D6E63</color>
+    <color name="colorEntertainment">#AB47BC</color>
+
+
 </resources>

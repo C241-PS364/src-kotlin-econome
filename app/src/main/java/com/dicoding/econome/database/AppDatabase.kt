@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.dicoding.econome.database.entity.Transaction
 import com.dicoding.econome.database.dao.TransactionDao
+import com.dicoding.econome.database.entity.Transaction
 
-@Database(entities = arrayOf(Transaction::class), version = 5)
+@Database(entities = arrayOf(Transaction::class), version = 6)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun transactionDao(): TransactionDao
 
