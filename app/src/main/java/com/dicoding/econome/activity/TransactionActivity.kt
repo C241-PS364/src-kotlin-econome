@@ -4,6 +4,9 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -17,6 +20,9 @@ import com.dicoding.econome.databinding.ActivityTransactionBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 class TransactionActivity : AppCompatActivity() {
     private lateinit var deleteTransaction: Transaction
@@ -91,6 +97,52 @@ class TransactionActivity : AppCompatActivity() {
 
         val swipeHelper = ItemTouchHelper(itemTouchHelper)
         swipeHelper.attachToRecyclerView(binding.rvTransactions)
+
+        // Initialize the spinners
+        val spinnerTimeRange: Spinner = findViewById(R.id.spinnerTimeRange)
+        val spinnerCategory: Spinner = findViewById(R.id.spinnerCategory)
+
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.time_range,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerTimeRange.adapter = adapter
+        }
+
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.categories,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerCategory.adapter = adapter
+        }
+
+        spinnerTimeRange.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                val timeRange = parent.getItemAtPosition(position).toString()
+                // Update your RecyclerView based on the selected time range
+                fetchFiltered(timeRange, spinnerCategory.selectedItem.toString())
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Another interface callback
+            }
+        }
+
+        spinnerCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                val category = parent.getItemAtPosition(position).toString()
+                // Update your RecyclerView based on the selected category
+                fetchFiltered(spinnerTimeRange.selectedItem.toString(), category)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Another interface callback
+            }
+        }
     }
 
     private fun fetchAll() {
@@ -103,6 +155,41 @@ class TransactionActivity : AppCompatActivity() {
         }
     }
 
+    private fun fetchFiltered(timeRange: String, category: String) {
+        GlobalScope.launch {
+            val allTransactions = db.transactionDao().getAll()
+
+            // Get the current date
+            val currentDate = LocalDate.now()
+
+            // Filter transactions based on the selected time range
+            val filteredByTimeRange = when (timeRange) {
+                "All Time" -> allTransactions
+                "Last 7 Days" -> allTransactions.filter {
+                    val transactionDate = LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                    ChronoUnit.DAYS.between(transactionDate, currentDate) <= 7
+                }
+                "Last 30 Days" -> allTransactions.filter {
+                    val transactionDate = LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                    ChronoUnit.DAYS.between(transactionDate, currentDate) <= 30
+                }
+                else -> allTransactions
+            }
+
+            // Filter transactions based on the selected category
+            val filteredTransactions = if (category == "All Categories") {
+                filteredByTimeRange
+            } else {
+                filteredByTimeRange.filter { it.category == category }
+            }
+
+            transactions = filteredTransactions
+
+            runOnUiThread {
+                transactionAdapter.setData(transactions)
+            }
+        }
+    }
 
     private fun undoDelete(){
         GlobalScope.launch {
