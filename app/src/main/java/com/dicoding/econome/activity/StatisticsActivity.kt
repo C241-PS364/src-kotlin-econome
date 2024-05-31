@@ -6,10 +6,12 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.econome.R
 import com.dicoding.econome.database.AppDatabase
 import com.dicoding.econome.database.entity.Transaction
 import com.dicoding.econome.databinding.ActivityStatisticsBinding
+import com.dicoding.econome.model.TopSpending
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
@@ -31,12 +33,20 @@ class StatisticsActivity : AppCompatActivity() {
         // Setup bottom navigation
         setupBottomNavigation()
 
+        // Setup RecyclerView
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        val topSpendings = mutableListOf<TopSpending>()
+        val adapter = TopSpendingAdapter(topSpendings)
+        binding.recyclerView.adapter = adapter
+
         // Fetch transactions and setup pie chart
         CoroutineScope(Dispatchers.IO).launch {
             val transactions = getTransactionsFromDatabase()
             val expenseTransactions = transactions.filter { it.amount < 0 } // Filter only expenses
             val categorySums = expenseTransactions.groupBy { it.category }
                 .mapValues { (_, trans) -> trans.sumOf { it.amount } }
+            val categoryCounts = expenseTransactions.groupBy { it.category }
+                .mapValues { (_, trans) -> trans.size }
 
             // Define the order of categories
             val categoriesOrder = listOf("Food", "Other", "Health and Beauty", "Transportation", "Housing", "Entertainment")
@@ -75,12 +85,40 @@ class StatisticsActivity : AppCompatActivity() {
                 binding.pieChart.setDrawEntryLabels(false)
                 binding.pieChart.setUsePercentValues(true)
                 binding.pieChart.invalidate()
+
+                // Update RecyclerView data
+                topSpendings.clear()
+                topSpendings.addAll(categoriesOrder.mapNotNull { category ->
+                    categorySums[category]?.let { totalExpense ->
+                        categoryCounts[category]?.let { itemCount ->
+                            TopSpending(
+                                iconRes = getCategoryIconRes(category),
+                                category = category,
+                                itemCount = itemCount,
+                                totalExpense = abs(totalExpense).toFloat()
+                            )
+                        }
+                    }
+                })
+                adapter.notifyDataSetChanged()
             }
         }
 
         binding.addTransactionFAB.setOnClickListener {
             val intent = Intent(this, AddTransactionActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun getCategoryIconRes(category: String): Int {
+        return when (category) {
+            "Food" -> R.drawable.ic_food
+            "Other" -> R.drawable.ic_other
+            "Health and Beauty" -> R.drawable.ic_health
+            "Transportation" -> R.drawable.ic_transportation
+            "Housing" -> R.drawable.ic_housing
+            "Entertainment" -> R.drawable.ic_entertainment
+            else -> R.drawable.ic_other
         }
     }
 
