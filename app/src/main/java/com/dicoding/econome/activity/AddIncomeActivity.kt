@@ -1,7 +1,9 @@
 package com.dicoding.econome.activity
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.text.InputType
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import com.dicoding.econome.database.AppDatabase
@@ -9,9 +11,7 @@ import com.dicoding.econome.database.entity.Transaction
 import com.dicoding.econome.databinding.ActivityAddIncomeBinding
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import java.util.Calendar
 
 class AddIncomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddIncomeBinding
@@ -33,20 +33,35 @@ class AddIncomeActivity : AppCompatActivity() {
                 binding.amountLayout.error = null
         }
 
-        // Update AddIncomeActivity
+        binding.dateButton.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+                val selectedDate = String.format("%02d-%02d-%d", selectedDay, selectedMonth + 1, selectedYear)
+                binding.dateButton.text = selectedDate
+            }, year, month, day).show()
+        }
+
         binding.addIncomeButton.setOnClickListener {
             val label = binding.labelInput.text.toString()
             val amount = binding.amountInput.text.toString().toDoubleOrNull()
-            val currentDate = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date()) // get current date
+            val date = binding.dateButton.text.toString()
+
             if (label.isEmpty())
                 binding.labelLayout.error = "Label cannot be empty"
             else if (amount == null)
                 binding.amountLayout.error = "Please enter a valid amount"
+            else if (date == "Select Date")
+                Toast.makeText(this, "Please select a date", Toast.LENGTH_SHORT).show()
             else {
-                val transaction = Transaction(0, label, amount, date = currentDate) // include date
+                val transaction = Transaction(0, label, amount, date = date)
                 insert(transaction)
             }
         }
+
         binding.closeButton.setOnClickListener {
             finish()
         }
