@@ -28,6 +28,7 @@
     <string name="item_count">%d items</string>
     <string name="total_expense">Total: %.2f</string>
     <string name="top_spending">Top Spending</string>
+    <string name="top_spending_details">Top Spending Details</string>
 
     <string-array name="time_range">
         <item>All Time</item>
