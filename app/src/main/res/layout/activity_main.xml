@@ -117,6 +117,13 @@
             android:layout_below="@+id/spinnerTimeRange"
             android:layout_marginTop="16dp" />
 
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChartIncome"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_below="@+id/lineChart"
+            android:layout_marginTop="16dp" />
+
     </LinearLayout>
 
     <com.google.android.material.bottomappbar.BottomAppBar

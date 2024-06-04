@@ -64,31 +64,42 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding.spinnerTimeRange.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                val timeRange = parent.getItemAtPosition(position).toString()
-                val filteredTransactions = when (timeRange) {
-                    "Last 7 Days" -> transactions.filter {
-                        val transactionDate = LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                        ChronoUnit.DAYS.between(transactionDate, LocalDate.now()) <= 7
-                    }
-                    "Last 30 Days" -> transactions.filter {
-                        val transactionDate = LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                        ChronoUnit.DAYS.between(transactionDate, LocalDate.now()) <= 30
-                    }
-                    else -> transactions
-                }
-                updateChart(filteredTransactions)
-            }
+        binding.spinnerTimeRange.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View,
+                    position: Int,
+                    id: Long
+                ) {
+                    val timeRange = parent.getItemAtPosition(position).toString()
+                    val filteredTransactions = when (timeRange) {
+                        "Last 7 Days" -> transactions.filter {
+                            val transactionDate =
+                                LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                            ChronoUnit.DAYS.between(transactionDate, LocalDate.now()) <= 7
+                        }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Another interface callback
+                        "Last 30 Days" -> transactions.filter {
+                            val transactionDate =
+                                LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                            ChronoUnit.DAYS.between(transactionDate, LocalDate.now()) <= 30
+                        }
+
+                        else -> transactions
+                    }
+                    updateChart(filteredTransactions)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {
+                    // Another interface callback
+                }
             }
-        }
     }
 
     private fun updateChart(transactions: List<Transaction>) {
-        val lineData = LineData()
+        val lineDataExpense = LineData()
+        val lineDataIncome = LineData()
 
         // Define colors for each category
         val colors = mapOf(
@@ -109,7 +120,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         // Create a LineDataSet for each category
-        // Create a LineDataSet for each category
         groupedTransactions.forEach { (category, dateToAmountMap) ->
             val lineEntries = ArrayList<Entry>()
             dateToAmountMap.entries.forEachIndexed { index, entry ->
@@ -124,10 +134,10 @@ class MainActivity : AppCompatActivity() {
             lineDataSet.valueTextSize = 16f
             lineDataSet.setDrawValues(false)
 
-            lineData.addDataSet(lineDataSet)
+            lineDataExpense.addDataSet(lineDataSet)
         }
 
-        binding.lineChart.data = lineData
+        binding.lineChart.data = lineDataExpense
         binding.lineChart.description.text = "Expenses over time"
         binding.lineChart.setNoDataText("No expenses yet!")
 
@@ -138,14 +148,57 @@ class MainActivity : AppCompatActivity() {
         val yAxisRight = binding.lineChart.axisRight
         yAxisRight.setDrawLabels(false)
 
+        // Group transactions by category and date, then sum the amounts for each date
+        val groupedIncomeTransactions = transactions.filter { it.amount > 0 }
+            .groupBy { it.category }
+            .mapValues { entry ->
+                entry.value.groupBy { it.date }
+                    .mapValues { it.value.sumOf { transaction -> transaction.amount } }
+            }
+
+        // Create a LineDataSet for each category
+        groupedIncomeTransactions.forEach { (category, dateToAmountMap) ->
+            val lineEntries = ArrayList<Entry>()
+            dateToAmountMap.entries.forEachIndexed { index, entry ->
+                val date = entry.key
+                val amount = entry.value
+                lineEntries.add(Entry(index.toFloat(), amount.toFloat()))
+            }
+
+            val lineDataSet = LineDataSet(lineEntries, category)
+            lineDataSet.color = Color.GREEN // Use green color for income
+            lineDataSet.valueTextColor = Color.BLACK
+            lineDataSet.valueTextSize = 16f
+            lineDataSet.setDrawValues(false)
+
+            lineDataIncome.addDataSet(lineDataSet)
+        }
+
+        binding.lineChartIncome.data = lineDataIncome
+        binding.lineChartIncome.description.text = "Income over time"
+        binding.lineChartIncome.setNoDataText("No income yet!")
+
+        val yAxisIncome = binding.lineChartIncome.axisLeft
+        yAxisIncome.setInverted(false)
+
+        val yAxisRightIncome = binding.lineChartIncome.axisRight
+        yAxisRightIncome.setDrawLabels(false)
+
         // set date as x-axis labels
-        val dates = transactions.map { it.date.substring(0, 5) }.distinct() // get only "dd-MM" and remove duplicates
+        val dates = transactions.map { it.date.substring(0, 5) }
+            .distinct() // get only "dd-MM" and remove duplicates
         val xAxis = binding.lineChart.xAxis
         xAxis.valueFormatter = IndexAxisValueFormatter(dates)
         xAxis.position = XAxis.XAxisPosition.BOTTOM // move dates to the bottom
 
+        val xAxisIncome = binding.lineChartIncome.xAxis
+        xAxisIncome.valueFormatter = IndexAxisValueFormatter(dates)
+        xAxisIncome.position = XAxis.XAxisPosition.BOTTOM // move dates to the bottom
+
+        binding.lineChartIncome.invalidate() // refreshes the chart
         binding.lineChart.invalidate() // refreshes the chart
     }
+
     private fun fetchAll() {
         GlobalScope.launch {
             transactions = db.transactionDao().getAll()
@@ -159,7 +212,7 @@ class MainActivity : AppCompatActivity() {
     private fun updateDashboard() {
         val balanceAmount = transactions.sumOf { it.amount }
         val incomeAmount = transactions.filter { it.amount > 0 }.sumOf { it.amount }
-        val expenseAmount = transactions.filter { it.amount < 0 }.sumOf { -it.amount}
+        val expenseAmount = transactions.filter { it.amount < 0 }.sumOf { -it.amount }
 
         binding.tvBalanceAmount.text = "Rp %.0f".format(balanceAmount)
         binding.tvIncomeAmount.text = "Rp %.0f".format(incomeAmount)

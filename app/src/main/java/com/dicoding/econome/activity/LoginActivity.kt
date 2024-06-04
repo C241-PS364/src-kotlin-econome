@@ -13,19 +13,19 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
-import com.dicoding.econome.response.Result
 import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.econome.R
 import com.dicoding.econome.databinding.ActivityLoginBinding
 import com.dicoding.econome.model.MainViewModel
 import com.dicoding.econome.model.SettingFactory
+import com.dicoding.econome.model.SettingViewModel
 import com.dicoding.econome.model.ViewModelFactory
+import com.dicoding.econome.response.Result
 import com.dicoding.econome.util.SettingPreference
 import com.github.mikephil.charting.BuildConfig
-import androidx.datastore.preferences.core.Preferences
-import com.dicoding.econome.model.SettingViewModel
 import kotlin.system.exitProcess
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
@@ -152,8 +152,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    @Deprecated("Deprecated in Java")
+    @Suppress("DEPRECATION")
     override fun onBackPressed() {
+        super.onBackPressed()
         finish()
         exitProcess(0)
     }
