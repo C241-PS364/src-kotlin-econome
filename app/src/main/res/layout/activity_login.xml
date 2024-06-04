@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?colorOnPrimary"
+    android:orientation="vertical">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:alpha="0"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/signin"
+        android:textColor="?colorSecondaryVariant"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/sign"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:alpha="0"
+        android:fontFamily="sans-serif-black"
+        android:text="@string/welcome"
+        android:textColor="?colorSecondaryVariant"
+        android:textSize="15.6dp"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.511"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="265dp"
+        android:layout_height="67dp"
+        android:layout_marginTop="16dp"
+        android:alpha="0"
+        android:contentDescription="@string/app_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sign" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/email"
+        android:layout_width="351dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="43dp"
+        android:alpha="0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/welcome"
+        app:startIconDrawable="@drawable/ic_baseline_alternate_email_24">
+
+        <com.dicoding.econome.util.EmailEditText
+            android:id="@+id/emailInput"
+            android:layout_width="351dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:hint="@string/email"
+            android:inputType="textAutoComplete"
+            android:saveEnabled="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/password"
+        android:layout_width="351dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:alpha="0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/email"
+        app:startIconDrawable="@drawable/ic_baseline_lock_24">
+
+        <com.dicoding.econome.util.PasswordEditText
+            android:id="@+id/passInput"
+            android:layout_width="351dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:saveEnabled="true" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnLogin"
+        android:layout_width="286dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="32dp"
+        android:alpha="0"
+        android:backgroundTint="?colorSecondary"
+        android:text="@string/signin"
+        android:textSize="28.6dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.504"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/signup2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="43dp"
+        android:alpha="0"
+        android:fontFamily="sans-serif"
+        android:text="@string/messagelogin"
+        android:textColor="?colorSecondaryVariant"
+        android:textSize="16.9sp"
+        app:layout_constraintStart_toStartOf="@+id/btnLogin"
+        app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/signup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="43dp"
+        android:layout_marginEnd="13dp"
+        android:alpha="0"
+        android:fontFamily="sans-serif-black"
+        android:text="@string/signup"
+        android:textColor="?colorSecondaryVariant"
+        android:textSize="16.9sp"
+        app:layout_constraintEnd_toEndOf="@+id/btnLogin"
+        app:layout_constraintTop_toBottomOf="@+id/btnLogin" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

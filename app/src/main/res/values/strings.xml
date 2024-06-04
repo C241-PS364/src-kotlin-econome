@@ -30,6 +30,29 @@
     <string name="top_spending">Top Spending</string>
     <string name="top_spending_details">Top Spending Details</string>
 
+    <string name="welcome">Hey there! Welcome to EconoMe!</string>
+    <string name="signin">Log In</string>
+    <string name="signup">Sign Up</string>
+    <string name="email">Email</string>
+    <string name="errormail">Please enter a valid email address</string>
+    <string name="errorpass">Password must be at least 8 characters</string>
+    <string name="messageregist">Already have an account?</string>
+    <string name="messagelogin">Dont have an account yet?</string>
+    <string name="name">Enter your name</string>
+    <string name="job">Enter your job</string>
+    <string name="age">Enter your age</string>
+    <string name="gender">Enter your gender</string>
+    <string name="password">Enter your password</string>
+    <string name="emptymail">Email cannot be empty</string>
+    <string name="emptyname">Name cannot be empty</string>
+    <string name="emptypass">Password cannot be empty</string>
+    <string name="logout">Are you sure you want to log out?</string>
+    <string name="wait">Please wait...</string>
+    <string name="permit">Permission denied</string>
+    <string name="login">Login successful</string>
+    <string name="regist">Registration successful</string>
+
+
     <string-array name="time_range">
         <item>All Time</item>
         <item>Last 7 Days</item>
