@@ -1,7 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-
     <item
         android:id="@+id/miHome"
         android:icon="@drawable/ic_home"
@@ -11,7 +8,6 @@
         android:id="@+id/miWallet"
         android:icon="@drawable/ic_wallet"
         android:title="@string/wallet" />
-
 
     <item
         android:id="@+id/miPlacholder"

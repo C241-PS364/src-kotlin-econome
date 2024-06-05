@@ -10,8 +10,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="ProfileActivity"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="ProfileActivity" />
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
@@ -36,9 +36,12 @@
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:contentDescription="@string/add_expense"
-        android:src="@drawable/ic_add"
+        android:src="@drawable/ic_add_new"
+        app:maxImageSize="38dp"
+        app:backgroundTint="?attr/colorPrimary"
         app:layout_anchor="@+id/bottomAppBar"
-        app:layout_anchorGravity="top|center" />
+        app:layout_anchorGravity="top|center"
+        app:tint="@color/white"/>
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

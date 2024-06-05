@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.room.Room
 import com.dicoding.econome.R
 import com.dicoding.econome.database.AppDatabase
@@ -58,7 +59,8 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.background = null
         binding.bottomNavigationView.menu.getItem(2).isEnabled = false
-
+        binding.bottomNavigationView.itemIconTintList = ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
+        binding.bottomNavigationView.itemTextColor = ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
         binding.addTransactionFAB.setOnClickListener {
             val intent = Intent(this, AddTransactionActivity::class.java)
             startActivity(intent)
@@ -177,7 +179,7 @@ class MainActivity : AppCompatActivity() {
         binding.lineChartIncome.data = lineDataIncome
         binding.lineChartIncome.description.text = "Income over time"
         binding.lineChartIncome.setNoDataText("No income yet!")
-
+        
         val yAxisIncome = binding.lineChartIncome.axisLeft
         yAxisIncome.setInverted(false)
 
