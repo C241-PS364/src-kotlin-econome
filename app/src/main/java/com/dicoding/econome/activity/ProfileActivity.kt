@@ -3,10 +3,14 @@ package com.dicoding.econome.activity
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.RelativeSizeSpan
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.dicoding.econome.R
 import com.dicoding.econome.databinding.ActivityProfileBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileBinding
@@ -14,6 +18,17 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+
+        val menu = bottomNavigationView.menu
+        for (i in 0 until menu.size()) {
+            val menuItem = menu.getItem(i)
+            val spannableString = SpannableString(menuItem.title)
+            val end = spannableString.length
+            spannableString.setSpan(RelativeSizeSpan(0.8f), 0, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            menuItem.title = spannableString
+        }
 
         binding.bottomNavigationView.selectedItemId = R.id.miProfile
 

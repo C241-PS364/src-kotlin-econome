@@ -3,6 +3,9 @@ package com.dicoding.econome.activity
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.RelativeSizeSpan
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -17,6 +20,7 @@ import com.dicoding.econome.adapter.TransactionAdapter
 import com.dicoding.econome.database.AppDatabase
 import com.dicoding.econome.database.entity.Transaction
 import com.dicoding.econome.databinding.ActivityTransactionBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -36,6 +40,17 @@ class TransactionActivity : AppCompatActivity() {
         binding = ActivityTransactionBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+
+        val menu = bottomNavigationView.menu
+        for (i in 0 until menu.size()) {
+            val menuItem = menu.getItem(i)
+            val spannableString = SpannableString(menuItem.title)
+            val end = spannableString.length
+            spannableString.setSpan(RelativeSizeSpan(0.8f), 0, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            menuItem.title = spannableString
+        }
 
         binding.bottomNavigationView.selectedItemId = R.id.miWallet
 
