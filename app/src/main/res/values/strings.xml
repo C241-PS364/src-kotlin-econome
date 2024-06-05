@@ -51,6 +51,7 @@
     <string name="permit">Permission denied</string>
     <string name="login">Login successful</string>
     <string name="regist">Registration successful</string>
+    <string name="transaction">Transaction</string>
 
 
     <string-array name="time_range">
