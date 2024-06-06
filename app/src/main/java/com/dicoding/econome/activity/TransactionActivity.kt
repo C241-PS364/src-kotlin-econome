@@ -122,18 +122,18 @@ class TransactionActivity : AppCompatActivity() {
         ArrayAdapter.createFromResource(
             this,
             R.array.time_range,
-            android.R.layout.simple_spinner_item
+            R.layout.spinner_item
         ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            adapter.setDropDownViewResource(R.layout.spinner_item)
             spinnerTimeRange.adapter = adapter
         }
 
         ArrayAdapter.createFromResource(
             this,
             R.array.categories,
-            android.R.layout.simple_spinner_item
+            R.layout.spinner_item
         ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            adapter.setDropDownViewResource(R.layout.spinner_item)
             spinnerCategory.adapter = adapter
         }
 

@@ -76,7 +76,9 @@ class AddTransactionActivity : AppCompatActivity() {
             val category = if (isIncome) "" else binding.categoryInput.text.toString()
             val date = binding.dateButton.text.toString()
 
-            if (!isIncome && category.isEmpty())
+            if (label.isEmpty())
+                Toast.makeText(this, "Label cannot be empty", Toast.LENGTH_SHORT).show()
+            else if (!isIncome && category.isEmpty())
                 Toast.makeText(this, "Category cannot be empty", Toast.LENGTH_SHORT).show()
             else if (!isIncome && !categories.contains(category))
                 Toast.makeText(this, "Please select a valid category", Toast.LENGTH_SHORT).show()

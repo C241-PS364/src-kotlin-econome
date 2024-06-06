@@ -13,5 +13,8 @@
     <color name="colorHousing">#8D6E63</color>
     <color name="colorEntertainment">#AB47BC</color>
 
+    <color name="colorPrimary">#205D5F</color>
+    <color name="colorSecondary">#76C5C8</color>
+
 
 </resources>

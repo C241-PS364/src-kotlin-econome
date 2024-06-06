@@ -50,13 +50,13 @@ class AddIncomeActivity : AppCompatActivity() {
             val amount = binding.amountInput.text.toString().toDoubleOrNull()
             val date = binding.dateButton.text.toString()
 
-            if (label.isEmpty())
-                binding.labelLayout.error = "Label cannot be empty"
-            else if (amount == null)
+            if (label.isEmpty()) {
+                Toast.makeText(this, "Label cannot be empty", Toast.LENGTH_SHORT).show()
+            } else if (amount == null) {
                 binding.amountLayout.error = "Please enter a valid amount"
-            else if (date == "Select Date")
+            } else if (date == "Select Date") {
                 Toast.makeText(this, "Please select a date", Toast.LENGTH_SHORT).show()
-            else {
+            } else {
                 val transaction = Transaction(0, label, amount, date = date)
                 insert(transaction)
             }
