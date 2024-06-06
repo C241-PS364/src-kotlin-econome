@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
+import com.dicoding.econome.R
 import com.dicoding.econome.database.AppDatabase
 import com.dicoding.econome.database.entity.Transaction
 import com.dicoding.econome.databinding.ActivityAddTransactionBinding
@@ -48,6 +49,13 @@ class AddTransactionActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, categories)
         binding.categoryInput.setAdapter(adapter)
 
+
+        binding.toggleButton.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            isIncome = checkedId == R.id.incomeButton
+            updateUI()
+        }
+        binding.toggleButton.isSingleSelection = true
+        binding.toggleButton.check(R.id.expenseButton)
         binding.expenseButton.setOnClickListener {
             isIncome = false
             updateUI()
@@ -65,7 +73,8 @@ class AddTransactionActivity : AppCompatActivity() {
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
             DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-                val selectedDate = String.format("%02d-%02d-%d", selectedDay, selectedMonth + 1, selectedYear)
+                val selectedDate =
+                    String.format("%02d-%02d-%d", selectedDay, selectedMonth + 1, selectedYear)
                 binding.dateButton.text = selectedDate
             }, year, month, day).show()
         }

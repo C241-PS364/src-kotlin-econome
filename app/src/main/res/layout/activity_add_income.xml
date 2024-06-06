@@ -73,18 +73,19 @@
             android:layout_marginEnd="12dp"
             android:text="Select Date" />
 
-
-        <Button
-            android:id="@+id/addIncomeButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="12dp"
-            android:layout_marginBottom="12dp"
-            android:text="@string/add_income"
-            android:textColor="@color/white" />
-
     </LinearLayout>
 
+    <Button
+        android:id="@+id/addIncomeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="100dp"
+        android:text="@string/add_income"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
