@@ -10,9 +10,6 @@ import android.text.SpannableString
 import android.text.style.RelativeSizeSpan
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -30,6 +27,7 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -43,7 +41,6 @@ class StatisticsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStatisticsBinding
     private val topSpendings = mutableListOf<TopSpending>()
     private lateinit var adapter: TopSpendingAdapter
-    private lateinit var spinnerTimeRange: Spinner
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,57 +54,63 @@ class StatisticsActivity : AppCompatActivity() {
             val menuItem = menu.getItem(i)
             val spannableString = SpannableString(menuItem.title)
             val end = spannableString.length
-            spannableString.setSpan(RelativeSizeSpan(0.8f), 0, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannableString.setSpan(
+                RelativeSizeSpan(0.8f),
+                0,
+                end,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
             menuItem.title = spannableString
         }
 
         // Setup bottom navigation
         setupBottomNavigation()
 
-        // Initialize the spinner
-        spinnerTimeRange = findViewById(R.id.spinnerTimeRange)
-        ArrayAdapter.createFromResource(
-            this,
-            R.array.time_range,
-            android.R.layout.simple_spinner_item
-        ).also { arrayAdapter ->
-            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinnerTimeRange.adapter = arrayAdapter
+        // Initialize the TabLayout
+        val tabLayoutTimeRange: TabLayout = findViewById(R.id.tabLayoutTimeRange)
+        val timeRanges = resources.getStringArray(R.array.time_range)
+        timeRanges.forEach { timeRange ->
+            tabLayoutTimeRange.addTab(tabLayoutTimeRange.newTab().setText(timeRange))
         }
+
+        tabLayoutTimeRange.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                val timeRange = tab.text.toString()
+                // Update your PieChart and TopSpending based on the selected time range
+                fetchFiltered(timeRange)
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+                // Do nothing
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab) {
+                // Do nothing
+            }
+        })
+
+        // Fetch transactions and setup pie chart
+        fetchFiltered("All Time")
 
         // Setup RecyclerView
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter = TopSpendingAdapter(topSpendings, spinnerTimeRange.selectedItem.toString())
+        adapter = TopSpendingAdapter(
+            topSpendings,
+            tabLayoutTimeRange.getTabAt(tabLayoutTimeRange.selectedTabPosition)?.text.toString()
+        )
         binding.recyclerView.adapter = adapter
 
         adapter.setOnItemClickListener { category ->
             val intent = Intent(this, TopSpendingDetailsActivity::class.java).apply {
                 putExtra("CATEGORY", category)
-                putExtra("TIME_RANGE", spinnerTimeRange.selectedItem.toString())
+                putExtra(
+                    "TIME_RANGE",
+                    tabLayoutTimeRange.getTabAt(tabLayoutTimeRange.selectedTabPosition)?.text.toString()
+                )
             }
             startActivity(intent)
         }
 
-
-        spinnerTimeRange.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View,
-                position: Int,
-                id: Long
-            ) {
-                val timeRange = parent.getItemAtPosition(position).toString()
-                // Update your PieChart and TopSpending based on the selected time range
-                fetchFiltered(timeRange)
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                // Another interface callback
-            }
-        }
-
-        // Fetch transactions and setup pie chart
-        fetchFiltered("All Time")
     }
 
     private fun fetchFiltered(timeRange: String) {
@@ -123,11 +126,13 @@ class StatisticsActivity : AppCompatActivity() {
                         LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
                     ChronoUnit.DAYS.between(transactionDate, currentDate) <= 7
                 }
+
                 "Last 30 Days" -> allTransactions.filter {
                     val transactionDate =
                         LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
                     ChronoUnit.DAYS.between(transactionDate, currentDate) <= 30
                 }
+
                 else -> allTransactions
             }
 
@@ -271,8 +276,10 @@ class StatisticsActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.background = null
         binding.bottomNavigationView.menu.getItem(2).isEnabled = false
-        binding.bottomNavigationView.itemIconTintList = ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
-        binding.bottomNavigationView.itemTextColor = ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
+        binding.bottomNavigationView.itemIconTintList =
+            ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
+        binding.bottomNavigationView.itemTextColor =
+            ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
     }
 
     private suspend fun getTransactionsFromDatabase(): List<Transaction> {
