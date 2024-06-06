@@ -31,7 +31,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="8dp"
-                    android:text="Select your\n transaction visibility below"
+                    android:text="Select your\ntransaction visibility below"
+                    android:layout_marginStart="8dp"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -40,7 +41,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:padding="8dp">
+                    android:padding="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp">
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="wrap_content"
@@ -53,11 +56,12 @@
                             android:id="@+id/spinnerTimeRange"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:dropDownSelector="@color/colorSecondary"
-                            android:popupBackground="@color/colorSecondary"
-                            android:spinnerMode="dropdown"
+                            android:layout_marginStart="4dp"
                             android:backgroundTint="@color/white"
-                            android:layout_marginStart="4dp"/>
+                            android:dropDownSelector="@color/colorSecondary"
+                            android:padding="0dp"
+                            android:popupBackground="@color/colorSecondary"
+                            android:spinnerMode="dropdown" />
 
                     </androidx.cardview.widget.CardView>
 
@@ -72,10 +76,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
-                            android:dropDownSelector="@color/colorSecondary"
-                            android:popupBackground="@color/colorSecondary"
                             android:backgroundTint="@color/white"
-                            android:spinnerMode="dropdown"/>
+                            android:dropDownSelector="@color/colorSecondary"
+                            android:padding="0dp"
+                            android:popupBackground="@color/colorSecondary"
+                            android:spinnerMode="dropdown" />
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>
             </LinearLayout>
@@ -98,7 +103,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvTransactions"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="490dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="16dp"
