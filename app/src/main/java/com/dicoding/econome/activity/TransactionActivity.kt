@@ -36,6 +36,9 @@ class TransactionActivity : AppCompatActivity() {
     private lateinit var transactionAdapter: TransactionAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var db: AppDatabase
+
+    private var selectedTimeRange = "All Time"
+    private var selectedCategory = "All Categories"
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityTransactionBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
@@ -48,7 +51,12 @@ class TransactionActivity : AppCompatActivity() {
             val menuItem = menu.getItem(i)
             val spannableString = SpannableString(menuItem.title)
             val end = spannableString.length
-            spannableString.setSpan(RelativeSizeSpan(0.8f), 0, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannableString.setSpan(
+                RelativeSizeSpan(0.8f),
+                0,
+                end,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
             menuItem.title = spannableString
         }
 
@@ -72,8 +80,10 @@ class TransactionActivity : AppCompatActivity() {
         }
         binding.bottomNavigationView.background = null
         binding.bottomNavigationView.menu.getItem(2).isEnabled = false
-        binding.bottomNavigationView.itemIconTintList = ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
-        binding.bottomNavigationView.itemTextColor = ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
+        binding.bottomNavigationView.itemIconTintList =
+            ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
+        binding.bottomNavigationView.itemTextColor =
+            ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
 
         binding.addTransactionFAB.setOnClickListener {
             val intent = Intent(this, AddTransactionActivity::class.java)
@@ -139,9 +149,9 @@ class TransactionActivity : AppCompatActivity() {
 
         spinnerTimeRange.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val timeRange = parent.getItemAtPosition(position).toString()
+                selectedTimeRange = parent.getItemAtPosition(position).toString()
                 // Update your RecyclerView based on the selected time range
-                fetchFiltered(timeRange, spinnerCategory.selectedItem.toString())
+                fetchFiltered(selectedTimeRange, selectedCategory)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -151,9 +161,9 @@ class TransactionActivity : AppCompatActivity() {
 
         spinnerCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
-                val category = parent.getItemAtPosition(position).toString()
+                selectedCategory = parent.getItemAtPosition(position).toString()
                 // Update your RecyclerView based on the selected category
-                fetchFiltered(spinnerTimeRange.selectedItem.toString(), category)
+                fetchFiltered(selectedTimeRange, selectedCategory)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -161,6 +171,7 @@ class TransactionActivity : AppCompatActivity() {
             }
         }
     }
+
 
     private fun fetchAll() {
         GlobalScope.launch {
@@ -183,13 +194,17 @@ class TransactionActivity : AppCompatActivity() {
             val filteredByTimeRange = when (timeRange) {
                 "All Time" -> allTransactions
                 "Last 7 Days" -> allTransactions.filter {
-                    val transactionDate = LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                    val transactionDate =
+                        LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
                     ChronoUnit.DAYS.between(transactionDate, currentDate) <= 7
                 }
+
                 "Last 30 Days" -> allTransactions.filter {
-                    val transactionDate = LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                    val transactionDate =
+                        LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
                     ChronoUnit.DAYS.between(transactionDate, currentDate) <= 30
                 }
+
                 else -> allTransactions
             }
 
@@ -208,7 +223,7 @@ class TransactionActivity : AppCompatActivity() {
         }
     }
 
-    private fun undoDelete(){
+    private fun undoDelete() {
         GlobalScope.launch {
             db.transactionDao().insertAll(deleteTransaction)
             transactions = oldTransactions
@@ -247,6 +262,6 @@ class TransactionActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        fetchAll()
+        fetchFiltered(selectedTimeRange, selectedCategory)
     }
 }

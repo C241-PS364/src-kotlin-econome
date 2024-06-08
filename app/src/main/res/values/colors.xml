@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="black">#333333</color>
+    <color name="white">#F5F6FA</color>
     <color name="red">#F44336</color>
     <color name="green">#4CAF50</color>
     <color name="grey">#919191</color>
 
-    <color name="colorFood">#FFA726</color>
-    <color name="colorOther">#FF7043</color>
-    <color name="colorHealth">#66BB6A</color>
-    <color name="colorTransportation">#42A5F5</color>
-    <color name="colorHousing">#8D6E63</color>
-    <color name="colorEntertainment">#AB47BC</color>
+    <color name="colorFood">#F44336</color>
+    <color name="colorOther">#757575</color>
+    <color name="colorHealth">#4CAF50</color>
+    <color name="colorTransportation">#2196F3</color>
+    <color name="colorHousing">#FF9800</color>
+    <color name="colorEntertainment">#673AB7</color>
+
+
+    <color name="colorBackground">#EFF6F6</color>
 
     <color name="colorPrimary">#205D5F</color>
     <color name="colorSecondary">#76C5C8</color>

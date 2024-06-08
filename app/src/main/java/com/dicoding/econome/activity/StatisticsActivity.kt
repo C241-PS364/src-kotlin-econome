@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.text.Html
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.RelativeSizeSpan
@@ -26,6 +27,7 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.google.android.flexbox.FlexboxLayout
+import com.google.android.flexbox.JustifyContent
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.CoroutineScope
@@ -146,11 +148,11 @@ class StatisticsActivity : AppCompatActivity() {
             // Define the order of categories
             val categoriesOrder = listOf(
                 "Food",
-                "Other",
-                "Health and Beauty",
+                "Health",
                 "Transportation",
                 "Housing",
-                "Entertainment"
+                "Entertainment",
+                "Other"
             )
 
             // Sort the entries according to the defined order
@@ -165,11 +167,11 @@ class StatisticsActivity : AppCompatActivity() {
             // Set colors for each category
             val categoryColors = mapOf(
                 "Food" to R.color.colorFood,
-                "Other" to R.color.colorOther,
-                "Health and Beauty" to R.color.colorHealth,
+                "Health" to R.color.colorHealth,
                 "Transportation" to R.color.colorTransportation,
                 "Housing" to R.color.colorHousing,
-                "Entertainment" to R.color.colorEntertainment
+                "Entertainment" to R.color.colorEntertainment,
+                "Other" to R.color.colorOther
             )
             pieDataSet.colors = categoriesOrder.map { category ->
                 ContextCompat.getColor(
@@ -185,7 +187,7 @@ class StatisticsActivity : AppCompatActivity() {
             withContext(Dispatchers.Main) {
                 val categoryIndicatorContainer: FlexboxLayout = binding.categoryIndicatorContainer
                 categoryIndicatorContainer.removeAllViews() // Clear old views
-                categoriesOrder.forEach { category ->
+                categoriesOrder.forEachIndexed { index, category ->
                     val categoryIndicator = LayoutInflater.from(this@StatisticsActivity)
                         .inflate(R.layout.category_indicator, categoryIndicatorContainer, false)
                     // Set the color and text of the category indicator
@@ -199,17 +201,48 @@ class StatisticsActivity : AppCompatActivity() {
                         )
                     )
                     categoryTextView.text = category
+                    categoryTextView.textSize= 10f
+
+                    // Create new layout params for the category indicator
+                    val layoutParams = FlexboxLayout.LayoutParams(
+                        FlexboxLayout.LayoutParams.WRAP_CONTENT,
+                        (16 * resources.displayMetrics.density).toInt() // Set the height to 16dp for example
+                    )
+                    // Set the margins (8dp for example)
+                    val margin = (8 * resources.displayMetrics.density).toInt()
+                    layoutParams.setMargins(margin, 4, margin, 4) // Reduced top and bottom margins
+                    // Set the flex basis percent to 0.33 (which is 100% / 3) to limit 3 items per line
+                    layoutParams.flexBasisPercent = if (index < 6) 0.25f else -1f
+                    categoryIndicator.layoutParams = layoutParams
+
                     categoryIndicatorContainer.addView(categoryIndicator)
                 }
+                categoryIndicatorContainer.justifyContent = JustifyContent.CENTER
+
 
                 binding.pieChart.data = pieData
                 binding.pieChart.description.isEnabled = false
                 binding.pieChart.isDrawHoleEnabled = true
-                binding.pieChart.setHoleColor(Color.GRAY)
-                binding.pieChart.setTransparentCircleColor(Color.GRAY)
+                binding.pieChart.setHoleColor(Color.TRANSPARENT)
+                binding.pieChart.setTransparentCircleColor(Color.TRANSPARENT)
                 binding.pieChart.setDrawEntryLabels(false) // This line hides the labels
                 binding.pieChart.setUsePercentValues(true)
                 binding.pieChart.legend.isEnabled = false
+
+                binding.pieChart.holeRadius = 50f
+
+                val totalExpense = expenseTransactions.sumOf { abs(it.amount) }
+                val formattedTotalExpense = if (totalExpense % 1 == 0.0) totalExpense.toInt() else totalExpense
+                val centerText = "<b>Expense</b><br>Rp ${formattedTotalExpense}"
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                    binding.pieChart.centerText = Html.fromHtml(centerText, Html.FROM_HTML_MODE_LEGACY)
+                } else {
+                    @Suppress("DEPRECATION")
+                    binding.pieChart.centerText = Html.fromHtml(centerText)
+                }
+                binding.pieChart.setCenterTextSize(12f)
+                binding.pieChart.setCenterTextColor(Color.BLACK)
+
                 binding.pieChart.invalidate()
 
                 // Update RecyclerView data
@@ -246,7 +279,7 @@ class StatisticsActivity : AppCompatActivity() {
         return when (category) {
             "Food" -> R.drawable.ic_food
             "Other" -> R.drawable.ic_other
-            "Health and Beauty" -> R.drawable.ic_health
+            "Health" -> R.drawable.ic_health
             "Transportation" -> R.drawable.ic_transportation
             "Housing" -> R.drawable.ic_housing
             "Entertainment" -> R.drawable.ic_entertainment
@@ -287,5 +320,12 @@ class StatisticsActivity : AppCompatActivity() {
             val dao = AppDatabase.getDatabase(this@StatisticsActivity).transactionDao()
             dao.getAll()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val tabLayoutTimeRange: TabLayout = findViewById(R.id.tabLayoutTimeRange)
+        val selectedTimeRange = tabLayoutTimeRange.getTabAt(tabLayoutTimeRange.selectedTabPosition)?.text.toString()
+        fetchFiltered(selectedTimeRange)
     }
 }

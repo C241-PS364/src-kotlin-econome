@@ -122,7 +122,7 @@ class MainActivity : AppCompatActivity() {
         val colors = mapOf(
             "Entertainment" to Color.RED,
             "Food" to Color.GREEN,
-            "Health and Beauty" to Color.BLUE,
+            "Health" to Color.BLUE,
             "Housing" to Color.YELLOW,
             "Other" to Color.MAGENTA,
             "Transportation" to Color.CYAN

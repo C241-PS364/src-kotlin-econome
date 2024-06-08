@@ -15,7 +15,7 @@
     <string name="expense">Rp5.000</string>
     <string name="income_title">Income</string>
     <string name="expense_title">expense</string>
-    <string name="transactions_history">Transactions</string>
+    <string name="transactions_title">Transactions</string>
     <string name="label">Label</string>
     <string name="amount">Amount</string>
     <string name="description">Description</string>
@@ -26,7 +26,7 @@
     <string name="profile">Profile</string>
     <string name="icon">Icon Category</string>
     <string name="item_count">%d items</string>
-    <string name="total_expense">Total: %.2f</string>
+    <string name="total_expense">Total Expense\n Rp %.0f</string>
     <string name="top_spending">Top Spending</string>
     <string name="top_spending_details">Top Spending Details</string>
 
@@ -52,6 +52,7 @@
     <string name="login">Login successful</string>
     <string name="regist">Registration successful</string>
     <string name="transaction">Transaction</string>
+    <string name="statistics_title">Statistics</string>
 
 
     <string-array name="time_range">
@@ -64,7 +65,7 @@
         <item>All Categories</item>
         <item>Entertainment</item>
         <item>Food</item>
-        <item>Health and Beauty</item>
+        <item>Health</item>
         <item>Housing</item>
         <item>Other</item>
         <item>Transportation</item>

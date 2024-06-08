@@ -4,8 +4,11 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
 
-        <item name="colorPrimary">#205D5F</item>
-        <item name="colorSecondary">#76C5C8</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorAccent">@color/colorSecondary</item>
+
+        <item name="android:windowBackground">@color/colorBackground</item>
 
     </style>
 

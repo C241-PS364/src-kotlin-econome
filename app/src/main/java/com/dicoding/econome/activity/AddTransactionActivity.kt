@@ -41,7 +41,7 @@ class AddTransactionActivity : AppCompatActivity() {
         val categories = arrayOf(
             "Entertainment",
             "Food",
-            "Health and Beauty",
+            "Health",
             "Housing",
             "Transportation",
             "Other"

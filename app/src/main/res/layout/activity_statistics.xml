@@ -11,13 +11,24 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="@string/statistics_title"
+            android:textColor="@color/black"
+            android:layout_marginTop="16dp"
+            android:textAlignment="center"/>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayoutTimeRange"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="16dp"
+            android:background="@color/colorBackground"/>
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/pieChart"
@@ -31,23 +42,30 @@
             android:id="@+id/categoryIndicatorContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
             app:layout_constraintTop_toBottomOf="@+id/pieChart"
+            app:alignItems="center"
             app:flexWrap="wrap" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/top_spending"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textColor="@color/black"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginStart="20dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="72dp"
-            android:padding="16dp" />
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp" />
 
     </LinearLayout>
 
