@@ -53,6 +53,7 @@
     <string name="regist">Registration successful</string>
     <string name="transaction">Transaction</string>
     <string name="statistics_title">Statistics</string>
+    <string name="greeting">Hello, User!</string>
 
 
     <string-array name="time_range">
