@@ -6,29 +6,41 @@
     android:layout_height="match_parent"
     tools:context=".activity.StatisticsActivity">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:text="@string/statistics_title"
-            android:textColor="@color/black"
-            android:layout_marginTop="16dp"
-            android:textAlignment="center"/>
+            app:cardElevation="@dimen/cardview_default_elevation">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayoutTimeRange"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="@color/colorBackground"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/statisticsTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/statistics_title"
+                    android:textAlignment="center"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayoutTimeRange"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
 
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/pieChart"
@@ -44,28 +56,28 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            app:layout_constraintTop_toBottomOf="@+id/pieChart"
             app:alignItems="center"
-            app:flexWrap="wrap" />
+            app:flexWrap="wrap"
+            app:layout_constraintTop_toBottomOf="@+id/pieChart" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/top_spending"
-            android:textColor="@color/black"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginStart="20dp"/>
+            android:text="@string/top_spending"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="72dp"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp" />
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="72dp" />
 
     </LinearLayout>
 
@@ -93,10 +105,10 @@
         android:layout_margin="16dp"
         android:contentDescription="@string/add_expense"
         android:src="@drawable/ic_add_new"
-        app:maxImageSize="38dp"
+        app:backgroundTint="?attr/colorPrimary"
         app:layout_anchor="@+id/bottomAppBar"
         app:layout_anchorGravity="top|center"
-        app:backgroundTint="?attr/colorPrimary"
-        app:tint="@color/white"/>
+        app:maxImageSize="38dp"
+        app:tint="@color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

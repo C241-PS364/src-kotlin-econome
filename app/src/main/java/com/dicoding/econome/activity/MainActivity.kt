@@ -3,12 +3,11 @@ package com.dicoding.econome.activity
 import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.RelativeSizeSpan
-import android.view.View
-import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.room.Room
@@ -32,12 +31,21 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var db: AppDatabase
-    private lateinit var transactions: List<Transaction>
+    private var transactions: List<Transaction> = listOf()
+
+    private lateinit var timeRanges: Array<String>
+    private var currentRangeIndex = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Check if the device version is greater than or equal to Lollipop
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Change the status bar color
+            window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
+        }
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
@@ -46,7 +54,12 @@ class MainActivity : AppCompatActivity() {
             val menuItem = menu.getItem(i)
             val spannableString = SpannableString(menuItem.title)
             val end = spannableString.length
-            spannableString.setSpan(RelativeSizeSpan(0.8f), 0, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannableString.setSpan(
+                RelativeSizeSpan(0.8f),
+                0,
+                end,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
             menuItem.title = spannableString
         }
 
@@ -74,44 +87,59 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.background = null
         binding.bottomNavigationView.menu.getItem(2).isEnabled = false
-        binding.bottomNavigationView.itemIconTintList = ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
-        binding.bottomNavigationView.itemTextColor = ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
+        binding.bottomNavigationView.itemIconTintList =
+            ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
+        binding.bottomNavigationView.itemTextColor =
+            ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
         binding.addTransactionFAB.setOnClickListener {
             val intent = Intent(this, AddTransactionActivity::class.java)
             startActivity(intent)
         }
 
-        binding.spinnerTimeRange.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    val timeRange = parent.getItemAtPosition(position).toString()
-                    val filteredTransactions = when (timeRange) {
-                        "Last 7 Days" -> transactions.filter {
-                            val transactionDate =
-                                LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                            ChronoUnit.DAYS.between(transactionDate, LocalDate.now()) <= 7
-                        }
+        // Initialize the time ranges
+        timeRanges = resources.getStringArray(R.array.time_range)
 
-                        "Last 30 Days" -> transactions.filter {
-                            val transactionDate =
-                                LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
-                            ChronoUnit.DAYS.between(transactionDate, LocalDate.now()) <= 30
-                        }
-
-                        else -> transactions
-                    }
-                    updateChart(filteredTransactions)
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>) {
-                    // Another interface callback
-                }
+        // Setup the time range selector
+        binding.tvTimeRange.text = timeRanges[currentRangeIndex]
+        binding.btnPrevious.setOnClickListener {
+            if (currentRangeIndex > 0) {
+                currentRangeIndex--
+                updateTimeRange()
             }
+        }
+        binding.btnNext.setOnClickListener {
+            if (currentRangeIndex < timeRanges.size - 1) {
+                currentRangeIndex++
+                updateTimeRange()
+            }
+        }
+
+        fetchAll()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fetchAll()
+    }
+
+    private fun updateTimeRange() {
+        binding.tvTimeRange.text = timeRanges[currentRangeIndex]
+        val filteredTransactions = when (timeRanges[currentRangeIndex]) {
+            "Last 7 Days" -> transactions.filter {
+                val transactionDate =
+                    LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                ChronoUnit.DAYS.between(transactionDate, LocalDate.now()) <= 7
+            }
+
+            "Last 30 Days" -> transactions.filter {
+                val transactionDate =
+                    LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                ChronoUnit.DAYS.between(transactionDate, LocalDate.now()) <= 30
+            }
+
+            else -> transactions
+        }
+        updateDashboard(filteredTransactions)
     }
 
     private fun updateChart(transactions: List<Transaction>) {
@@ -146,7 +174,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             val lineDataSet = LineDataSet(lineEntries, category)
-            lineDataSet.color = colors[category] ?: Color.BLACK // Use a specific color for each category
+            lineDataSet.color =
+                colors[category] ?: Color.BLACK // Use a specific color for each category
             lineDataSet.valueTextColor = Color.BLACK
             lineDataSet.valueTextSize = 16f
             lineDataSet.setDrawValues(false)
@@ -194,7 +223,7 @@ class MainActivity : AppCompatActivity() {
         binding.lineChartIncome.data = lineDataIncome
         binding.lineChartIncome.description.text = "Income over time"
         binding.lineChartIncome.setNoDataText("No income yet!")
-        
+
         val yAxisIncome = binding.lineChartIncome.axisLeft
         yAxisIncome.setInverted(false)
 
@@ -221,25 +250,20 @@ class MainActivity : AppCompatActivity() {
             transactions = db.transactionDao().getAll()
 
             runOnUiThread {
-                updateDashboard()
+                updateDashboard(transactions)
             }
         }
     }
 
-    private fun updateDashboard() {
-        val balanceAmount = transactions.sumOf { it.amount }
-        val incomeAmount = transactions.filter { it.amount > 0 }.sumOf { it.amount }
-        val expenseAmount = transactions.filter { it.amount < 0 }.sumOf { -it.amount }
+    private fun updateDashboard(filteredTransactions: List<Transaction>) {
+        val balanceAmount = filteredTransactions.sumOf { it.amount }
+        val incomeAmount = filteredTransactions.filter { it.amount > 0 }.sumOf { it.amount }
+        val expenseAmount = filteredTransactions.filter { it.amount < 0 }.sumOf { -it.amount }
 
         binding.tvBalanceAmount.text = "Rp %.0f".format(balanceAmount)
         binding.tvIncomeAmount.text = "Rp %.0f".format(incomeAmount)
         binding.tvExpenseAmount.text = "Rp %.0f".format(expenseAmount)
 
-        updateChart(transactions)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        fetchAll()
+        updateChart(filteredTransactions)
     }
 }

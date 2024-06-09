@@ -32,19 +32,19 @@ class TransactionAdapter(private var transactions: List<Transaction>) :
         if(transaction.amount >= 0){
             holder.amount.text = "+ Rp%.0f".format(transaction.amount)
             holder.amount.setTextColor(ContextCompat.getColor(context, R.color.green))
-            holder.categoryIcon.setImageResource(R.drawable.ic_money) // Set icon to ic_money for income
+            holder.categoryIcon.setImageResource(R.drawable.ic_income_new) // Set icon to ic_money for income
         }else{
             holder.amount.text = "- Rp%.0f".format(Math.abs(transaction.amount))
             holder.amount.setTextColor(ContextCompat.getColor(context, R.color.red))
 
             val categoryIconRes = when (transaction.category) {
-                "Entertainment" -> R.drawable.ic_entertainment
-                "Food" -> R.drawable.ic_food
+                "Entertainment" -> R.drawable.ic_entertainment_new
+                "Food" -> R.drawable.ic_food_new
                 "Health" -> R.drawable.ic_health
-                "Housing" -> R.drawable.ic_housing
-                "Other" -> R.drawable.ic_other
-                "Transportation" -> R.drawable.ic_transportation
-                else -> R.drawable.ic_other
+                "Housing" -> R.drawable.ic_housing_new
+                "Other" -> R.drawable.ic_other_new
+                "Transportation" -> R.drawable.ic_transportation_new
+                else -> R.drawable.ic_other_new
             }
             holder.categoryIcon.setImageResource(categoryIconRes)
         }

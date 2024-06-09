@@ -1,12 +1,14 @@
 package com.dicoding.econome.activity
 
 import android.app.DatePickerDialog
+import android.os.Build
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import com.dicoding.econome.R
 import com.dicoding.econome.database.AppDatabase
@@ -24,6 +26,12 @@ class AddTransactionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAddTransactionBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Check if the device version is greater than or equal to Lollipop
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Change the status bar color
+            window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
+        }
 
         binding.amountInput.inputType =
             InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL

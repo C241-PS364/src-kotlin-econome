@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     android:orientation="horizontal"
-    app:cardCornerRadius="16dp">
+    app:cardCornerRadius="16dp"
+    app:cardElevation="6dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,23 +16,23 @@
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/category_icon_background"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="6dp"
             app:cardBackgroundColor="?attr/colorPrimary"
             app:cardCornerRadius="24dp"
-            app:cardElevation="2dp"
-            android:layout_gravity="center">
+            app:cardElevation="4dp">
 
             <ImageView
                 android:id="@+id/icon"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:layout_margin="6dp"
                 android:layout_gravity="center"
-                app:tint="@color/white"
-                android:contentDescription="@string/icon" />
+                android:layout_margin="6dp"
+                android:contentDescription="@string/icon"
+                app:tint="@color/white" />
 
         </com.google.android.material.card.MaterialCardView>
 
@@ -39,9 +40,9 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_gravity="center"
             android:padding="1dp">
 
             <TextView
@@ -49,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
-                android:textSize="14sp"
+                android:textSize="14dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -57,18 +58,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/darker_gray"
-                android:textSize="12sp" />
+                android:textSize="12dp" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/total_expense"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:text="Total Expense\n Rp 10000"
             android:layout_gravity="center"
-            android:textSize="14sp"
-            android:textAlignment="center"/>
+            android:text="Total Expense\n Rp 10000"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

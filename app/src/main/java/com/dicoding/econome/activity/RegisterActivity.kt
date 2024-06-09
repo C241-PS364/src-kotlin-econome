@@ -5,17 +5,19 @@ import android.animation.ObjectAnimator
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import com.dicoding.econome.response.Result
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
+import androidx.core.content.ContextCompat
 import com.dicoding.econome.R
 import com.dicoding.econome.databinding.ActivityRegisterBinding
 import com.dicoding.econome.model.MainViewModel
 import com.dicoding.econome.model.ViewModelFactory
+import com.dicoding.econome.response.Result
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
@@ -28,6 +30,13 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Check if the device version is greater than or equal to Lollipop
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Change the status bar color
+            window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
+        }
+
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         playAnimation()

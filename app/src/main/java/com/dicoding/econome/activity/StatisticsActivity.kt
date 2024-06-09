@@ -4,6 +4,7 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.Spannable
@@ -48,6 +49,12 @@ class StatisticsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityStatisticsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Check if the device version is greater than or equal to Lollipop
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Change the status bar color
+            window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
+        }
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
@@ -277,13 +284,13 @@ class StatisticsActivity : AppCompatActivity() {
 
     private fun getCategoryIconRes(category: String): Int {
         return when (category) {
-            "Food" -> R.drawable.ic_food
-            "Other" -> R.drawable.ic_other
+            "Food" -> R.drawable.ic_food_new
+            "Other" -> R.drawable.ic_other_new
             "Health" -> R.drawable.ic_health
-            "Transportation" -> R.drawable.ic_transportation
-            "Housing" -> R.drawable.ic_housing
-            "Entertainment" -> R.drawable.ic_entertainment
-            else -> R.drawable.ic_other
+            "Transportation" -> R.drawable.ic_transportation_new
+            "Housing" -> R.drawable.ic_housing_new
+            "Entertainment" -> R.drawable.ic_entertainment_new
+            else -> R.drawable.ic_other_new
         }
     }
 

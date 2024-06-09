@@ -1,15 +1,16 @@
 package com.dicoding.econome.activity
 
+import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.dicoding.econome.R
 import com.dicoding.econome.adapter.TransactionAdapter
 import com.dicoding.econome.database.AppDatabase
 import com.dicoding.econome.database.entity.Transaction
 import com.dicoding.econome.databinding.ActivityTopSpendingDetailsBinding
+import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,18 +28,27 @@ class TopSpendingDetailsActivity : AppCompatActivity() {
         binding = ActivityTopSpendingDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Check if the device version is greater than or equal to Lollipop
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Change the status bar color
+            window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
+        }
+
         val category = intent.getStringExtra("CATEGORY") ?: ""
-        val timeRange = intent.getStringExtra("TIME_RANGE") ?: ""
 
-        val spinnerTimeRange = binding.spinnerTimeRange
+        // Initialize the TabLayout
+        val tabLayoutTimeRange: TabLayout = binding.tabLayoutTimeRange
         val timeRanges = arrayOf("All Time", "Last 7 Days", "Last 30 Days")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, timeRanges)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerTimeRange.adapter = adapter
+        timeRanges.forEach { timeRange ->
+            tabLayoutTimeRange.addTab(tabLayoutTimeRange.newTab().setText(timeRange))
+        }
 
-        spinnerTimeRange.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                val selectedTimeRange = timeRanges[position]
+        // Set the default selected tab to "All Time"
+        tabLayoutTimeRange.getTabAt(0)?.select()
+
+        val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                val selectedTimeRange = timeRanges[tab.position]
                 CoroutineScope(Dispatchers.IO).launch {
                     val transactions = getTransactionsFromDatabase(category, selectedTimeRange)
                     withContext(Dispatchers.Main) {
@@ -47,9 +57,22 @@ class TopSpendingDetailsActivity : AppCompatActivity() {
                 }
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>) {
+            override fun onTabUnselected(tab: TabLayout.Tab) {
                 // Do nothing
             }
+
+            override fun onTabReselected(tab: TabLayout.Tab) {
+                // Do nothing
+            }
+        }
+
+        tabLayoutTimeRange.addOnTabSelectedListener(tabSelectedListener)
+
+        // Manually call onTabSelected for the default tab
+        tabSelectedListener.onTabSelected(tabLayoutTimeRange.getTabAt(0)!!)
+
+        binding.backButton.setOnClickListener {
+            finish()
         }
     }
 

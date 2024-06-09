@@ -5,15 +5,15 @@
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     app:cardCornerRadius="16dp"
-    app:cardElevation="4dp">
+    app:cardElevation="6dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
-        android:gravity="center_vertical"
-        android:layout_margin="8dp">
+        android:gravity="center_vertical">
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/category_icon_background"
@@ -21,17 +21,17 @@
             android:layout_height="48dp"
             android:layout_marginStart="6dp"
             android:layout_marginEnd="6dp"
+            app:cardBackgroundColor="?attr/colorPrimary"
             app:cardCornerRadius="24dp"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="?attr/colorPrimary">
+            app:cardElevation="4dp">
 
             <ImageView
                 android:id="@+id/category_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:layout_gravity="center"
                 android:layout_marginStart="6dp"
                 android:layout_marginEnd="6dp"
-                android:layout_gravity="center"
                 android:contentDescription="@string/category_icon"
                 app:tint="@color/white" />
         </com.google.android.material.card.MaterialCardView>
@@ -49,9 +49,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:text="Food"
-                android:textStyle="bold"
+                android:textColor="@color/black"
                 android:textSize="16dp"
-                android:textColor="@color/black"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/date"

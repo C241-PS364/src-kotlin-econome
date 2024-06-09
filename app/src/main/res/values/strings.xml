@@ -14,7 +14,7 @@
     <string name="income">Rp15.000</string>
     <string name="expense">Rp5.000</string>
     <string name="income_title">Income</string>
-    <string name="expense_title">expense</string>
+    <string name="expense_title">Expense</string>
     <string name="transactions_title">Transactions</string>
     <string name="label">Label</string>
     <string name="amount">Amount</string>
