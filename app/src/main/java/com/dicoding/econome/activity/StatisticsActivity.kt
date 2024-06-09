@@ -120,6 +120,11 @@ class StatisticsActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.backButton.setOnClickListener {
+            binding.bottomNavigationView.selectedItemId = R.id.miHome
+            finish()
+        }
+
     }
 
     private fun fetchFiltered(timeRange: String) {

@@ -177,6 +177,11 @@ class TransactionActivity : AppCompatActivity() {
                 // Another interface callback
             }
         }
+
+        binding.backButton.setOnClickListener {
+            binding.bottomNavigationView.selectedItemId = R.id.miHome
+            finish()
+        }
     }
 
 
