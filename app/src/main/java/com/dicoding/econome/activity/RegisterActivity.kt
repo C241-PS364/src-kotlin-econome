@@ -2,12 +2,15 @@ package com.dicoding.econome.activity
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +21,7 @@ import com.dicoding.econome.databinding.ActivityRegisterBinding
 import com.dicoding.econome.model.MainViewModel
 import com.dicoding.econome.model.ViewModelFactory
 import com.dicoding.econome.response.Result
+import java.util.Calendar
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
@@ -41,6 +45,7 @@ class RegisterActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         playAnimation()
 
+
         binding.login.setOnClickListener {
             val i = Intent(this, LoginActivity::class.java)
             startActivity(
@@ -48,15 +53,35 @@ class RegisterActivity : AppCompatActivity() {
                 ActivityOptionsCompat.makeSceneTransitionAnimation(this@RegisterActivity).toBundle()
             )
         }
+        val gender = arrayOf(
+            "Male",
+            "Female",
+        )
+        val major = arrayOf(
+            "Psychology",
+            "Economics", "Computer Science",
+            "Engineering",
+            "Biology",
+        )
+
+        val genderadapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, gender)
+        binding.genderInput.setAdapter(genderadapter)
+
+        val majoradapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, major)
+        binding.majorEditText.setAdapter(majoradapter)
 
         binding.apply {
+            ageEditText.setOnClickListener {
+                showDatePickerDialog(ageEditText)
+            }
+
             btnRegist.setOnClickListener {
                 val nama = textInput.text.toString()
                 val email = emailInput.text.toString()
                 val pass = passInput.text.toString()
-                val age = ageInput.toString()
-                val job = jobInput.toString()
-                val gender = genderInput.toString()
+                val age = ageEditText.text.toString()
+                val major = majorEditText.text.toString()
+                val gender = genderInput.text.toString()
                 when {
                     nama.isEmpty() -> {
                         textInput.error = resources.getString(R.string.emptyname)
@@ -71,14 +96,30 @@ class RegisterActivity : AppCompatActivity() {
                     }
 
                     else -> {
-                        register(nama, email, pass, age, job, gender)
+                        register(nama, email, pass, age, major, gender)
                     }
                 }
             }
         }
     }
 
-    private fun register(nama: String, email: String, pass: String, age: String, job: String, gender: String) {
+
+
+    private fun showDatePickerDialog(editText: EditText) {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+            val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+            editText.setText(selectedDate)
+        }, year, month, day)
+
+        datePickerDialog.show()
+    }
+
+    private fun register(nama: String, email: String, pass: String, age: String, major: String, gender: String) {
         dialog = Dialog(this)
         dialog.setContentView(R.layout.loading)
         dialog.setCancelable(false)
@@ -87,7 +128,7 @@ class RegisterActivity : AppCompatActivity() {
         }
         val i = Intent(this, LoginActivity::class.java)
 
-        mainViewModel.register(nama, email, pass, age, job, gender).observe(this) { result ->
+        mainViewModel.register(nama, email, pass, age, major, gender).observe(this) { result ->
             if (result != null) {
                 dialog.apply {
                     when (result) {
@@ -137,8 +178,8 @@ class RegisterActivity : AppCompatActivity() {
     private fun playAnimation() {
         binding.apply {
             val title = ObjectAnimator.ofFloat(sign, View.ALPHA, 1f).setDuration(DURATION)
-            val image = ObjectAnimator.ofFloat(imageView, View.ALPHA, 1f).setDuration(DURATION)
-            val subtitle = ObjectAnimator.ofFloat(welcome, View.ALPHA, 1f).setDuration(DURATION)
+//            val image = ObjectAnimator.ofFloat(imageView, View.ALPHA, 1f).setDuration(DURATION)
+//            val subtitle = ObjectAnimator.ofFloat(welcome, View.ALPHA, 1f).setDuration(DURATION)
             val email = ObjectAnimator.ofFloat(email, View.ALPHA, 1f).setDuration(DURATION)
             val name = ObjectAnimator.ofFloat(name, View.ALPHA, 1f).setDuration(DURATION)
             val pass = ObjectAnimator.ofFloat(password, View.ALPHA, 1f).setDuration(DURATION)
@@ -151,7 +192,7 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             AnimatorSet().apply {
-                playSequentially(title, image, subtitle, name, email, pass, button, together)
+                playSequentially(title, name, email, pass, button, together)
                 start()
             }
         }

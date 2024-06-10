@@ -33,11 +33,11 @@ class Repository private constructor(
         emitSource(localData)
     }
 
-    fun register(nama: String, email: String, pass: String, age: String, job: String, gender: String): LiveData<Result<ApiResponse?>> =
+    fun register(nama: String, email: String, pass: String, age: String, major: String, gender: String): LiveData<Result<ApiResponse?>> =
         liveData {
             emit(Result.Loading)
             try {
-                val response = apiService.postRegister(nama, email, pass, age, job, gender)
+                val response = apiService.postRegister(nama, email, pass, age, major, gender)
                 _response.value = response
 
             } catch (e: Exception) {
@@ -49,9 +49,6 @@ class Repository private constructor(
         }
 
     companion object {
-        const val DEFAULTSIZE = 50
-        const val DEFAULTPAGE = 20
-        const val LOCATION = 1
 
         @Volatile
         private var instance: Repository? = null

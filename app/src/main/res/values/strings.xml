@@ -30,8 +30,11 @@
     <string name="top_spending">Top Spending</string>
     <string name="top_spending_details">Top Spending Details</string>
 
-    <string name="welcome">Hey there! Welcome to EconoMe!</string>
-    <string name="signin">Log In</string>
+    <string name="welcome">Welcome to EconoMe!</string>
+    <string name="desc_welcome">Plan and manage your money with us!</string>
+    <string name="desc_signup">Please sign up first</string>
+    <string name="signfree">Sign Up for Free</string>
+    <string name="signin">Sign In</string>
     <string name="signup">Sign Up</string>
     <string name="email">Email</string>
     <string name="errormail">Please enter a valid email address</string>
@@ -39,8 +42,8 @@
     <string name="messageregist">Already have an account?</string>
     <string name="messagelogin">Dont have an account yet?</string>
     <string name="name">Enter your name</string>
-    <string name="job">Enter your job</string>
-    <string name="age">Enter your age</string>
+    <string name="major">Enter your major</string>
+    <string name="age">Enter your date of birth</string>
     <string name="gender">Enter your gender</string>
     <string name="password">Enter your password</string>
     <string name="emptymail">Email cannot be empty</string>

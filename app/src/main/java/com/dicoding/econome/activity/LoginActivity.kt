@@ -28,7 +28,7 @@ import com.dicoding.econome.model.ViewModelFactory
 import com.dicoding.econome.response.Result
 import com.dicoding.econome.util.SettingPreference
 import com.github.mikephil.charting.BuildConfig
-import kotlin.system.exitProcess
+
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -142,8 +142,8 @@ class LoginActivity : AppCompatActivity() {
     private fun playAnimation() {
         binding.apply {
             val title = ObjectAnimator.ofFloat(sign, View.ALPHA, 1f).setDuration(DURATION)
-            val image = ObjectAnimator.ofFloat(imageView, View.ALPHA, 1f).setDuration(DURATION)
-            val subtitle = ObjectAnimator.ofFloat(welcome, View.ALPHA, 1f).setDuration(DURATION)
+//            val image = ObjectAnimator.ofFloat(imageView, View.ALPHA, 1f).setDuration(DURATION)
+//            val subtitle = ObjectAnimator.ofFloat(welcome, View.ALPHA, 1f).setDuration(DURATION)
             val email = ObjectAnimator.ofFloat(email, View.ALPHA, 1f).setDuration(DURATION)
             val pass = ObjectAnimator.ofFloat(password, View.ALPHA, 1f).setDuration(DURATION)
             val button = ObjectAnimator.ofFloat(btnLogin, View.ALPHA, 1f).setDuration(DURATION)
@@ -155,18 +155,18 @@ class LoginActivity : AppCompatActivity() {
             }
 
             AnimatorSet().apply {
-                playSequentially(title, image, subtitle, email, pass, button, together)
+                playSequentially(title, email, pass, button, together)
                 start()
             }
         }
     }
 
-    @Suppress("DEPRECATION")
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
-        exitProcess(0)
-    }
+//    @Suppress("DEPRECATION")
+//    override fun onBackPressed() {
+//        super.onBackPressed()
+//        finish()
+//        exitProcess(0)
+//    }
 
     companion object {
         const val DURATION: Long = 333

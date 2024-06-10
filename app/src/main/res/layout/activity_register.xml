@@ -7,57 +7,36 @@
     android:orientation="vertical">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/welcome"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:fontFamily="sans-serif-medium"
-        android:text="@string/signup"
-        android:textColor="?colorSecondaryVariant"
-        android:textSize="24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/sign"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
-        android:fontFamily="sans-serif-black"
-        android:text="@string/welcome"
-        android:textColor="?colorSecondaryVariant"
-        android:textSize="16dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="68dp"
+        android:text="@string/desc_signup"
         android:textAlignment="center"
+        android:textColor="?colorSecondaryVariant"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="265dp"
-        android:layout_height="67dp"
-        android:layout_marginTop="16dp"
-        android:contentDescription="@string/app_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sign" />
-
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/name"
+        style="@style/MyTextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="38dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcome"
+        app:layout_constraintTop_toBottomOf="@+id/sign"
         app:startIconDrawable="@drawable/ic_baseline_person_24">
 
         <com.dicoding.econome.util.NameEditText
             android:id="@+id/textInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
             android:hint="@string/name"
             android:inputType="textAutoComplete"
             android:saveEnabled="true" />
@@ -65,8 +44,11 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/email"
+        style="@style/MyTextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
         android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -85,8 +67,11 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/password"
+        style="@style/MyTextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
         android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -105,12 +90,16 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/ageInput"
+        style="@style/MyTextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
         android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password">
+        app:layout_constraintTop_toBottomOf="@+id/password"
+        app:startIconDrawable="@drawable/baseline_calendar_today_24">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/ageEditText"
@@ -118,69 +107,77 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:hint="@string/age"
-            android:inputType="number"
+            android:focusable="false"
+            android:inputType="none"
             android:saveEnabled="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/jobInput"
+        android:id="@+id/majorInput"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:hint="@string/major"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
         android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ageInput">
+        app:layout_constraintTop_toBottomOf="@+id/ageInput"
+        app:startIconDrawable="@drawable/baseline_business_center_24">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/jobEditText"
+        <AutoCompleteTextView
+            android:id="@+id/majorEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:hint="@string/job"
-            android:inputType="text"
-            android:saveEnabled="true" />
+            android:layout_height="match_parent"
+            android:inputType="none"
+            android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/genderInput"
-        android:layout_width="0dp"
+        android:id="@+id/genderLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:hint="@string/gender"
+        app:errorEnabled="true"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
         android:layout_marginTop="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/jobInput"
-        app:startIconDrawable="@drawable/ic_baseline_person_24">
+        app:layout_constraintTop_toBottomOf="@+id/majorInput"
+        app:startIconDrawable="@drawable/baseline_compare_arrows_24">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/genderEditText"
+        <AutoCompleteTextView
+            android:id="@+id/genderInput"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:hint="@string/gender"
-            android:inputType="text"
-            android:saveEnabled="true" />
+            android:layout_height="match_parent"
+            android:inputType="none"
+            android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnRegist"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="300dp"
+        android:layout_height="55dp"
         android:layout_marginTop="28dp"
-        android:backgroundTint="?colorSecondary"
+        android:backgroundTint="?colorPrimary"
         android:text="@string/signup"
-        android:textSize="28dp"
+        android:textSize="18dp"
+        app:cornerRadius="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/genderInput" />
+        app:layout_constraintTop_toBottomOf="@+id/genderLayout" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/login2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="13dp"
-        android:layout_marginTop="43dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
         android:fontFamily="sans-serif"
-        android:text="@string/messagelogin"
+        android:text="@string/messageregist"
         android:textColor="?colorSecondaryVariant"
         android:textSize="17sp"
         app:layout_constraintStart_toStartOf="@+id/btnRegist"
@@ -190,13 +187,27 @@
         android:id="@+id/login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="43dp"
-        android:layout_marginEnd="13dp"
+        android:layout_marginTop="24dp"
         android:fontFamily="sans-serif-black"
         android:text="@string/signin"
         android:textColor="?colorSecondaryVariant"
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="@+id/btnRegist"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/login2"
         app:layout_constraintTop_toBottomOf="@+id/btnRegist" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/sign"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.048"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/sec_logo" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

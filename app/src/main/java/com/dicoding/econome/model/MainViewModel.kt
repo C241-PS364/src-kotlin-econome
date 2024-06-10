@@ -17,8 +17,8 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     val rotate: LiveData<Boolean> = mRotate
 
     fun login(email: String, pass: String) = repository.login(email, pass)
-    fun register(nama: String, email: String, pass: String, age: String, job: String, gender: String) =
-        repository.register(nama, email, pass, age, job, gender)
+    fun register(nama: String, email: String, pass: String, age: String, major: String, gender: String) =
+        repository.register(nama, email, pass, age, major, gender)
 }
 
 class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
