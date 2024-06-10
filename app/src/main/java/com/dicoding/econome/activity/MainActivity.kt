@@ -148,12 +148,12 @@ class MainActivity : AppCompatActivity() {
 
         // Define colors for each category
         val colors = mapOf(
-            "Entertainment" to Color.RED,
-            "Food" to Color.GREEN,
-            "Health" to Color.BLUE,
-            "Housing" to Color.YELLOW,
-            "Other" to Color.MAGENTA,
-            "Transportation" to Color.CYAN
+            "Entertainment" to ContextCompat.getColor(this, R.color.colorEntertainment),
+            "Food" to ContextCompat.getColor(this, R.color.colorFood),
+            "Health" to ContextCompat.getColor(this, R.color.colorHealth),
+            "Housing" to ContextCompat.getColor(this, R.color.colorHousing),
+            "Other" to ContextCompat.getColor(this, R.color.colorOther),
+            "Transportation" to ContextCompat.getColor(this, R.color.colorTransportation),
         )
 
         // Group transactions by category and date, then sum the amounts for each date
@@ -174,8 +174,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             val lineDataSet = LineDataSet(lineEntries, category)
-            lineDataSet.color =
-                colors[category] ?: Color.BLACK // Use a specific color for each category
+            lineDataSet.color = colors[category] ?: Color.BLACK
             lineDataSet.valueTextColor = Color.BLACK
             lineDataSet.valueTextSize = 16f
             lineDataSet.setDrawValues(false)
@@ -186,6 +185,9 @@ class MainActivity : AppCompatActivity() {
         binding.lineChart.data = lineDataExpense
         binding.lineChart.description.text = "Expenses over time"
         binding.lineChart.setNoDataText("No expenses yet!")
+        binding.lineChart.axisLeft.setDrawGridLines(false)
+        binding.lineChart.axisRight.setDrawGridLines(false)
+        binding.lineChart.xAxis.setDrawGridLines(false)
 
         // invert the y-axis
         val yAxis = binding.lineChart.axisLeft
@@ -223,6 +225,9 @@ class MainActivity : AppCompatActivity() {
         binding.lineChartIncome.data = lineDataIncome
         binding.lineChartIncome.description.text = "Income over time"
         binding.lineChartIncome.setNoDataText("No income yet!")
+        binding.lineChartIncome.axisLeft.setDrawGridLines(false)
+        binding.lineChartIncome.axisRight.setDrawGridLines(false)
+        binding.lineChartIncome.xAxis.setDrawGridLines(false)
 
         val yAxisIncome = binding.lineChartIncome.axisLeft
         yAxisIncome.setInverted(false)
