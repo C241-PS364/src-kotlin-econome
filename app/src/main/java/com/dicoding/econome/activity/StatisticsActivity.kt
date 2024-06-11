@@ -33,6 +33,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
@@ -127,8 +128,27 @@ class StatisticsActivity : AppCompatActivity() {
 
     }
 
+    private fun setFirstTimeStatus(status: Boolean) {
+        val sharedPreferences = getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putBoolean("isFirstTime", status)
+        editor.apply()
+    }
+
+    private fun isFirstTime(): Boolean {
+        val sharedPreferences = getSharedPreferences("PREFERENCE", MODE_PRIVATE)
+        return sharedPreferences.getBoolean("isFirstTime", true)
+    }
+
     private fun fetchFiltered(timeRange: String) {
+        if (isFirstTime()) {
+            binding.progressBarPieChart.visibility = View.VISIBLE
+            binding.progressBarRvTopSpending.visibility = View.VISIBLE
+            setFirstTimeStatus(false)
+        }
+
         CoroutineScope(Dispatchers.IO).launch {
+            delay(200)
             val allTransactions = getTransactionsFromDatabase()
             val currentDate = LocalDate.now()
 
@@ -136,44 +156,31 @@ class StatisticsActivity : AppCompatActivity() {
             val filteredTransactions = when (timeRange) {
                 "All Time" -> allTransactions
                 "Last 7 Days" -> allTransactions.filter {
-                    val transactionDate =
-                        LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                    val transactionDate = LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
                     ChronoUnit.DAYS.between(transactionDate, currentDate) <= 7
                 }
-
                 "Last 30 Days" -> allTransactions.filter {
-                    val transactionDate =
-                        LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                    val transactionDate = LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
                     ChronoUnit.DAYS.between(transactionDate, currentDate) <= 30
                 }
-
                 else -> allTransactions
             }
 
-            val expenseTransactions =
-                filteredTransactions.filter { it.amount < 0 } // Filter only expenses
+            val expenseTransactions = filteredTransactions.filter { it.amount < 0 } // Filter only expenses
             val categorySums = expenseTransactions.groupBy { it.category }
                 .mapValues { (_, trans) -> trans.sumOf { it.amount } }
             val categoryCounts = expenseTransactions.groupBy { it.category }
                 .mapValues { (_, trans) -> trans.size }
 
             // Define the order of categories
-            val categoriesOrder = listOf(
-                "Food",
-                "Health",
-                "Transportation",
-                "Housing",
-                "Entertainment",
-                "Other"
-            )
+            val categoriesOrder = listOf("Food", "Health", "Transportation", "Housing", "Entertainment", "Other")
 
             // Sort the entries according to the defined order
             val pieEntries = categoriesOrder.mapNotNull { category ->
                 categorySums[category]?.let { PieEntry(abs(it.toFloat()), category) }
-            }
+            }.sortedBy { categoriesOrder.indexOf(it.label) }
 
             val pieDataSet = PieDataSet(pieEntries, "Expenses")
-
             pieDataSet.valueFormatter = CustomPercentFormatter(binding.pieChart)
 
             // Set colors for each category
@@ -186,10 +193,7 @@ class StatisticsActivity : AppCompatActivity() {
                 "Other" to R.color.colorOther
             )
             pieDataSet.colors = categoriesOrder.map { category ->
-                ContextCompat.getColor(
-                    this@StatisticsActivity,
-                    categoryColors[category] ?: R.color.colorOther
-                )
+                ContextCompat.getColor(this@StatisticsActivity, categoryColors[category] ?: R.color.colorOther)
             }
             pieDataSet.valueTextColor = Color.WHITE
             pieDataSet.valueTextSize = 12f
@@ -204,16 +208,12 @@ class StatisticsActivity : AppCompatActivity() {
                         .inflate(R.layout.category_indicator, categoryIndicatorContainer, false)
                     // Set the color and text of the category indicator
                     val categoryColorView: View = categoryIndicator.findViewById(R.id.categoryColor)
-                    val categoryTextView: TextView =
-                        categoryIndicator.findViewById(R.id.categoryText)
+                    val categoryTextView: TextView = categoryIndicator.findViewById(R.id.categoryText)
                     (categoryColorView.background as GradientDrawable).setColor(
-                        ContextCompat.getColor(
-                            this@StatisticsActivity,
-                            categoryColors[category] ?: R.color.colorOther
-                        )
+                        ContextCompat.getColor(this@StatisticsActivity, categoryColors[category] ?: R.color.colorOther)
                     )
                     categoryTextView.text = category
-                    categoryTextView.textSize= 10f
+                    categoryTextView.textSize = 10f
 
                     // Create new layout params for the category indicator
                     val layoutParams = FlexboxLayout.LayoutParams(
@@ -231,7 +231,6 @@ class StatisticsActivity : AppCompatActivity() {
                 }
                 categoryIndicatorContainer.justifyContent = JustifyContent.CENTER
 
-
                 binding.pieChart.data = pieData
                 binding.pieChart.description.isEnabled = false
                 binding.pieChart.isDrawHoleEnabled = true
@@ -245,7 +244,7 @@ class StatisticsActivity : AppCompatActivity() {
 
                 val totalExpense = expenseTransactions.sumOf { abs(it.amount) }
                 val formattedTotalExpense = if (totalExpense % 1 == 0.0) totalExpense.toInt() else totalExpense
-                val centerText = "<b>Expense</b><br>Rp ${formattedTotalExpense}"
+                val centerText = "<b>Expense</b><br>Rp $formattedTotalExpense"
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                     binding.pieChart.centerText = Html.fromHtml(centerText, Html.FROM_HTML_MODE_LEGACY)
                 } else {
@@ -271,7 +270,14 @@ class StatisticsActivity : AppCompatActivity() {
                         }
                     }
                 })
+                topSpendings.sortBy { topSpending -> categoriesOrder.indexOf(topSpending.category) }
+
                 adapter.notifyDataSetChanged()
+                binding.progressBarPieChart.visibility = View.GONE
+                binding.progressBarRvTopSpending.visibility = View.GONE
+                binding.pieChart.visibility = View.VISIBLE
+                binding.recyclerView.visibility = View.VISIBLE
+                binding.categoryIndicatorContainer.visibility = View.VISIBLE
             }
         }
 
@@ -280,6 +286,7 @@ class StatisticsActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
 
     class CustomPercentFormatter(private val pieChart: PieChart) : PercentFormatter(pieChart) {
         override fun getFormattedValue(value: Float): String {

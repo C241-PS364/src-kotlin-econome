@@ -10,6 +10,7 @@ import android.text.style.RelativeSizeSpan
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ProgressBar
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -24,6 +25,7 @@ import com.dicoding.econome.databinding.ActivityTransactionBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -37,6 +39,7 @@ class TransactionActivity : AppCompatActivity() {
     private lateinit var transactionAdapter: TransactionAdapter
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var db: AppDatabase
+    private lateinit var progressBar: ProgressBar
 
     private var selectedTimeRange = "All Time"
     private var selectedCategory = "All Categories"
@@ -182,6 +185,9 @@ class TransactionActivity : AppCompatActivity() {
             binding.bottomNavigationView.selectedItemId = R.id.miHome
             finish()
         }
+
+        progressBar = findViewById(R.id.progressBarRvTransactions)
+        fetchFiltered(selectedTimeRange, selectedCategory)
     }
 
 
@@ -196,7 +202,11 @@ class TransactionActivity : AppCompatActivity() {
     }
 
     private fun fetchFiltered(timeRange: String, category: String) {
+        progressBar.visibility = View.VISIBLE
+
         GlobalScope.launch {
+            delay(300)
+
             val allTransactions = db.transactionDao().getAll()
 
             // Get the current date
@@ -231,6 +241,7 @@ class TransactionActivity : AppCompatActivity() {
 
             runOnUiThread {
                 transactionAdapter.setData(transactions)
+                progressBar.visibility = View.GONE
             }
         }
     }
