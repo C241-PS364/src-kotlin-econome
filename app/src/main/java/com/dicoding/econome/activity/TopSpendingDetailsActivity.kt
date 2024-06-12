@@ -1,11 +1,9 @@
 package com.dicoding.econome.activity
 
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.econome.R
 import com.dicoding.econome.adapter.TransactionAdapter
@@ -33,11 +31,7 @@ class TopSpendingDetailsActivity : AppCompatActivity() {
 
         tvNoTransaction = findViewById(R.id.tvNoTransaction)
 
-        // Check if the device version is greater than or equal to Lollipop
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // Change the status bar color
-            window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
-        }
+
 
         val category = intent.getStringExtra("CATEGORY") ?: ""
 

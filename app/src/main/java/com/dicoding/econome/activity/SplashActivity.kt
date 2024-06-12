@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -44,9 +45,15 @@ class SplashActivity : AppCompatActivity() {
 
         Glide.with(this)
             .asGif()
-            .load("logo")
+            .load(R.drawable.sec_logo)
             .apply(RequestOptions.placeholderOf(R.drawable.sec_logo))
+            .apply(RequestOptions.circleCropTransform())
             .into(binding.logo)
+
+        // Load the fade-in animation
+        val fadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in)
+        // Start the animation on the logo
+        binding.logo.startAnimation(fadeInAnimation)
     }
 
     companion object {

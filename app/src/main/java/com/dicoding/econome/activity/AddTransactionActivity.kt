@@ -27,11 +27,6 @@ class AddTransactionActivity : AppCompatActivity() {
         binding = ActivityAddTransactionBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Check if the device version is greater than or equal to Lollipop
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // Change the status bar color
-            window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
-        }
 
         binding.amountInput.inputType =
             InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_DECIMAL

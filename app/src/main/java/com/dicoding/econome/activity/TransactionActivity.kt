@@ -52,12 +52,6 @@ class TransactionActivity : AppCompatActivity() {
 
         tvNoTransaction = findViewById(R.id.tvNoTransaction)
 
-        // Check if the device version is greater than or equal to Lollipop
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // Change the status bar color
-            window.statusBarColor = ContextCompat.getColor(this, R.color.colorPrimary)
-        }
-
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
         val menu = bottomNavigationView.menu
