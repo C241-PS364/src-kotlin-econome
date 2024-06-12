@@ -33,7 +33,12 @@ class ProfileActivity : AppCompatActivity() {
             val menuItem = menu.getItem(i)
             val spannableString = SpannableString(menuItem.title)
             val end = spannableString.length
-            spannableString.setSpan(RelativeSizeSpan(0.8f), 0, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannableString.setSpan(
+                RelativeSizeSpan(0.8f),
+                0,
+                end,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
             menuItem.title = spannableString
         }
 
@@ -58,8 +63,10 @@ class ProfileActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.background = null
         binding.bottomNavigationView.menu.getItem(2).isEnabled = false
-        binding.bottomNavigationView.itemIconTintList = ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
-        binding.bottomNavigationView.itemTextColor = ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
+        binding.bottomNavigationView.itemIconTintList =
+            ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
+        binding.bottomNavigationView.itemTextColor =
+            ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
 
         binding.addTransactionFAB.setOnClickListener {
             val intent = Intent(this, AddTransactionActivity::class.java)

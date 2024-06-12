@@ -104,22 +104,29 @@ class RegisterActivity : AppCompatActivity() {
     }
 
 
-
     private fun showDatePickerDialog(editText: EditText) {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        val datePickerDialog = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-            val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
-            editText.setText(selectedDate)
-        }, year, month, day)
+        val datePickerDialog =
+            DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+                val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+                editText.setText(selectedDate)
+            }, year, month, day)
 
         datePickerDialog.show()
     }
 
-    private fun register(nama: String, email: String, pass: String, age: String, major: String, gender: String) {
+    private fun register(
+        nama: String,
+        email: String,
+        pass: String,
+        age: String,
+        major: String,
+        gender: String
+    ) {
         dialog = Dialog(this)
         dialog.setContentView(R.layout.loading)
         dialog.setCancelable(false)

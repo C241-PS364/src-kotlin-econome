@@ -159,13 +159,17 @@ class StatisticsActivity : AppCompatActivity() {
             val filteredTransactions = when (timeRange) {
                 "All Time" -> allTransactions
                 "Last 7 Days" -> allTransactions.filter {
-                    val transactionDate = LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                    val transactionDate =
+                        LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
                     ChronoUnit.DAYS.between(transactionDate, currentDate) <= 7
                 }
+
                 "Last 30 Days" -> allTransactions.filter {
-                    val transactionDate = LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                    val transactionDate =
+                        LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
                     ChronoUnit.DAYS.between(transactionDate, currentDate) <= 30
                 }
+
                 else -> allTransactions
             }
 
@@ -178,14 +182,16 @@ class StatisticsActivity : AppCompatActivity() {
                     binding.recyclerView.visibility = View.VISIBLE
                 }
             }
-            val expenseTransactions = filteredTransactions.filter { it.amount < 0 } // Filter only expenses
+            val expenseTransactions =
+                filteredTransactions.filter { it.amount < 0 } // Filter only expenses
             val categorySums = expenseTransactions.groupBy { it.category }
                 .mapValues { (_, trans) -> trans.sumOf { it.amount } }
             val categoryCounts = expenseTransactions.groupBy { it.category }
                 .mapValues { (_, trans) -> trans.size }
 
             // Define the order of categories
-            val categoriesOrder = listOf("Food", "Health", "Transportation", "Housing", "Entertainment", "Other")
+            val categoriesOrder =
+                listOf("Food", "Health", "Transportation", "Housing", "Entertainment", "Other")
 
             // Sort the entries according to the defined order
             val pieEntries = categoriesOrder.mapNotNull { category ->
@@ -205,7 +211,10 @@ class StatisticsActivity : AppCompatActivity() {
                 "Other" to R.color.colorOther
             )
             pieDataSet.colors = categoriesOrder.map { category ->
-                ContextCompat.getColor(this@StatisticsActivity, categoryColors[category] ?: R.color.colorOther)
+                ContextCompat.getColor(
+                    this@StatisticsActivity,
+                    categoryColors[category] ?: R.color.colorOther
+                )
             }
             pieDataSet.valueTextColor = Color.WHITE
             pieDataSet.valueTextSize = 12f
@@ -220,9 +229,13 @@ class StatisticsActivity : AppCompatActivity() {
                         .inflate(R.layout.category_indicator, categoryIndicatorContainer, false)
                     // Set the color and text of the category indicator
                     val categoryColorView: View = categoryIndicator.findViewById(R.id.categoryColor)
-                    val categoryTextView: TextView = categoryIndicator.findViewById(R.id.categoryText)
+                    val categoryTextView: TextView =
+                        categoryIndicator.findViewById(R.id.categoryText)
                     (categoryColorView.background as GradientDrawable).setColor(
-                        ContextCompat.getColor(this@StatisticsActivity, categoryColors[category] ?: R.color.colorOther)
+                        ContextCompat.getColor(
+                            this@StatisticsActivity,
+                            categoryColors[category] ?: R.color.colorOther
+                        )
                     )
                     categoryTextView.text = category
                     categoryTextView.textSize = 10f
@@ -255,10 +268,12 @@ class StatisticsActivity : AppCompatActivity() {
                 binding.pieChart.holeRadius = 50f
 
                 val totalExpense = expenseTransactions.sumOf { abs(it.amount) }
-                val formattedTotalExpense = if (totalExpense % 1 == 0.0) totalExpense.toInt() else totalExpense
+                val formattedTotalExpense =
+                    if (totalExpense % 1 == 0.0) totalExpense.toInt() else totalExpense
                 val centerText = "<b>Expense</b><br>Rp $formattedTotalExpense"
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    binding.pieChart.centerText = Html.fromHtml(centerText, Html.FROM_HTML_MODE_LEGACY)
+                    binding.pieChart.centerText =
+                        Html.fromHtml(centerText, Html.FROM_HTML_MODE_LEGACY)
                 } else {
                     @Suppress("DEPRECATION")
                     binding.pieChart.centerText = Html.fromHtml(centerText)
@@ -364,7 +379,8 @@ class StatisticsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         val tabLayoutTimeRange: TabLayout = findViewById(R.id.tabLayoutTimeRange)
-        val selectedTimeRange = tabLayoutTimeRange.getTabAt(tabLayoutTimeRange.selectedTabPosition)?.text.toString()
+        val selectedTimeRange =
+            tabLayoutTimeRange.getTabAt(tabLayoutTimeRange.selectedTabPosition)?.text.toString()
         fetchFiltered(selectedTimeRange)
     }
 }

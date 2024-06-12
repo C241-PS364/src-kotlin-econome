@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="TextAppearance.Title" parent="TextAppearance.AppCompat">
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">20sp</item>
@@ -7,7 +8,7 @@
     </style>
 
 
-        <style name="CustomSpinnerDropdown" parent="Widget.AppCompat.ListView.DropDown">
-            <item name="android:background">@color/colorSecondary</item>
-        </style>
+    <style name="CustomSpinnerDropdown" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:background">@color/colorSecondary</item>
+    </style>
 </resources>

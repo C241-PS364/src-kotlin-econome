@@ -162,7 +162,12 @@ class TransactionActivity : AppCompatActivity() {
         }
 
         spinnerTimeRange.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 selectedTimeRange = parent.getItemAtPosition(position).toString()
                 // Update your RecyclerView based on the selected time range
                 fetchFiltered(selectedTimeRange, selectedCategory)
@@ -174,7 +179,12 @@ class TransactionActivity : AppCompatActivity() {
         }
 
         spinnerCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 selectedCategory = parent.getItemAtPosition(position).toString()
                 // Update your RecyclerView based on the selected category
                 fetchFiltered(selectedTimeRange, selectedCategory)

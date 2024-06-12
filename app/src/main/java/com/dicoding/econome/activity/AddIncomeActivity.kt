@@ -49,7 +49,8 @@ class AddIncomeActivity : AppCompatActivity() {
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
             DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-                val selectedDate = String.format("%02d-%02d-%d", selectedDay, selectedMonth + 1, selectedYear)
+                val selectedDate =
+                    String.format("%02d-%02d-%d", selectedDay, selectedMonth + 1, selectedYear)
                 binding.dateButton.text = selectedDate
             }, year, month, day).show()
         }

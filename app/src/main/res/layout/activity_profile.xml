@@ -37,10 +37,10 @@
         android:layout_margin="16dp"
         android:contentDescription="@string/add_expense"
         android:src="@drawable/ic_add_new"
-        app:maxImageSize="38dp"
         app:backgroundTint="?attr/colorPrimary"
         app:layout_anchor="@+id/bottomAppBar"
         app:layout_anchorGravity="top|center"
-        app:tint="@color/white"/>
+        app:maxImageSize="38dp"
+        app:tint="@color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

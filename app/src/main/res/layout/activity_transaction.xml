@@ -32,9 +32,9 @@
                 android:id="@+id/rvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:padding="16dp"
                 android:text="@string/transactions_title"
-                android:layout_gravity="center"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="20sp"
@@ -123,26 +123,25 @@
         </com.google.android.material.card.MaterialCardView>
 
 
-
         <ProgressBar
+            android:id="@+id/progressBarRvTransactions"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/progressBarRvTransactions"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/tvNoTransaction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="@string/null_handling_message"
             android:textSize="16sp"
-            android:gravity="center"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/cardViewFilter"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardViewFilter" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvTransactions"

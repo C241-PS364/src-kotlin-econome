@@ -8,10 +8,11 @@ import androidx.lifecycle.map
 import com.dicoding.econome.database.AppDatabase
 import com.dicoding.econome.response.LoginResponse
 import com.dicoding.econome.response.Result
+
 class Repository private constructor(
     private val apiService: ApiService,
     private val appDatabase: AppDatabase
-){
+) {
     private val _user = MutableLiveData<LoginResponse?>()
     private val user: LiveData<LoginResponse?> = _user
 
@@ -33,7 +34,14 @@ class Repository private constructor(
         emitSource(localData)
     }
 
-    fun register(nama: String, email: String, pass: String, age: String, major: String, gender: String): LiveData<Result<ApiResponse?>> =
+    fun register(
+        nama: String,
+        email: String,
+        pass: String,
+        age: String,
+        major: String,
+        gender: String
+    ): LiveData<Result<ApiResponse?>> =
         liveData {
             emit(Result.Loading)
             try {

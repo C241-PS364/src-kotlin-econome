@@ -94,7 +94,10 @@ class TopSpendingDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun getTransactionsFromDatabase(category: String, timeRange: String): List<Transaction> {
+    private suspend fun getTransactionsFromDatabase(
+        category: String,
+        timeRange: String
+    ): List<Transaction> {
         val dao = AppDatabase.getDatabase(this).transactionDao()
         val allTransactions = dao.getAll()
 
@@ -105,13 +108,17 @@ class TopSpendingDetailsActivity : AppCompatActivity() {
         val filteredByTimeRange = when (timeRange) {
             "All Time" -> allTransactions
             "Last 7 Days" -> allTransactions.filter {
-                val transactionDate = LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                val transactionDate =
+                    LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
                 ChronoUnit.DAYS.between(transactionDate, currentDate) <= 7
             }
+
             "Last 30 Days" -> allTransactions.filter {
-                val transactionDate = LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                val transactionDate =
+                    LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
                 ChronoUnit.DAYS.between(transactionDate, currentDate) <= 30
             }
+
             else -> allTransactions
         }
 

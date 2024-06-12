@@ -98,6 +98,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="50dp" />
+
         <TextView
             android:id="@+id/tvNoTransaction"
             android:layout_width="wrap_content"
@@ -106,7 +107,8 @@
             android:layout_margin="50dp"
             android:text="@string/null_handling_message"
             android:textSize="16sp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"

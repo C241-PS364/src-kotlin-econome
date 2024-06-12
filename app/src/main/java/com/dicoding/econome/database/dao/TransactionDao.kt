@@ -13,7 +13,11 @@ interface TransactionDao {
     fun getAll(): List<Transaction>
 
     @Query("SELECT * FROM transactions WHERE category = :category AND date BETWEEN :startDate AND :endDate")
-    fun getTransactionByCategoryAndDate(category: String, startDate: String, endDate: String): List<Transaction>
+    fun getTransactionByCategoryAndDate(
+        category: String,
+        startDate: String,
+        endDate: String
+    ): List<Transaction>
 
     @Insert
     fun insertAll(vararg transaction: Transaction)

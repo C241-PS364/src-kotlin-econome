@@ -11,13 +11,17 @@ import com.dicoding.econome.R
 import com.dicoding.econome.activity.TopSpendingDetailsActivity
 import com.dicoding.econome.model.TopSpending
 
-class TopSpendingAdapter(private val topSpendings: List<TopSpending>, private val timeRange: String) :
+class TopSpendingAdapter(
+    private val topSpendings: List<TopSpending>,
+    private val timeRange: String
+) :
     RecyclerView.Adapter<TopSpendingAdapter.TopSpendingViewHolder>() {
 
     private var onItemClickListener: ((String) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopSpendingViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_top_spending, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_top_spending, parent, false)
         return TopSpendingViewHolder(view)
     }
 
@@ -38,7 +42,8 @@ class TopSpendingAdapter(private val topSpendings: List<TopSpending>, private va
             icon.setImageResource(topSpending.iconRes)
             category.text = topSpending.category
             itemCount.text = itemView.context.getString(R.string.item_count, topSpending.itemCount)
-            totalExpense.text = itemView.context.getString(R.string.total_expense, topSpending.totalExpense)
+            totalExpense.text =
+                itemView.context.getString(R.string.total_expense, topSpending.totalExpense)
         }
 
         init {

@@ -29,11 +29,11 @@ class TransactionAdapter(private var transactions: List<Transaction>) :
         val transaction = transactions[position]
         val context = holder.amount.context
 
-        if(transaction.amount >= 0){
+        if (transaction.amount >= 0) {
             holder.amount.text = "+ Rp%.0f".format(transaction.amount)
             holder.amount.setTextColor(ContextCompat.getColor(context, R.color.green))
             holder.categoryIcon.setImageResource(R.drawable.ic_income_new) // Set icon to ic_money for income
-        }else{
+        } else {
             holder.amount.text = "- Rp%.0f".format(Math.abs(transaction.amount))
             holder.amount.setTextColor(ContextCompat.getColor(context, R.color.red))
 
@@ -57,7 +57,7 @@ class TransactionAdapter(private var transactions: List<Transaction>) :
         return transactions.size
     }
 
-    fun setData(transactions: List<Transaction>){
+    fun setData(transactions: List<Transaction>) {
         this.transactions = transactions
         notifyDataSetChanged()
     }
