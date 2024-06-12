@@ -12,6 +12,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ProgressBar
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -40,6 +41,7 @@ class TransactionActivity : AppCompatActivity() {
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var db: AppDatabase
     private lateinit var progressBar: ProgressBar
+    private lateinit var tvNoTransaction: TextView
 
     private var selectedTimeRange = "All Time"
     private var selectedCategory = "All Categories"
@@ -47,6 +49,8 @@ class TransactionActivity : AppCompatActivity() {
         binding = ActivityTransactionBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        tvNoTransaction = findViewById(R.id.tvNoTransaction)
 
         // Check if the device version is greater than or equal to Lollipop
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -241,6 +245,13 @@ class TransactionActivity : AppCompatActivity() {
 
             runOnUiThread {
                 transactionAdapter.setData(transactions)
+                if (transactions.isEmpty()) {
+                    tvNoTransaction.visibility = View.VISIBLE
+                    binding.rvTransactions.visibility = View.GONE
+                } else {
+                    tvNoTransaction.visibility = View.GONE
+                    binding.rvTransactions.visibility = View.VISIBLE
+                }
                 progressBar.visibility = View.GONE
             }
         }

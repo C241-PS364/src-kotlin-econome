@@ -45,11 +45,14 @@ class StatisticsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStatisticsBinding
     private val topSpendings = mutableListOf<TopSpending>()
     private lateinit var adapter: TopSpendingAdapter
+    private lateinit var tvNoTransaction: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityStatisticsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        tvNoTransaction = findViewById(R.id.tvNoTransaction)
 
         // Check if the device version is greater than or equal to Lollipop
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -166,6 +169,15 @@ class StatisticsActivity : AppCompatActivity() {
                 else -> allTransactions
             }
 
+            withContext(Dispatchers.Main) {
+                if (filteredTransactions.isEmpty()) {
+                    binding.tvNoTransaction.visibility = View.VISIBLE
+                    binding.recyclerView.visibility = View.GONE
+                } else {
+                    binding.tvNoTransaction.visibility = View.GONE
+                    binding.recyclerView.visibility = View.VISIBLE
+                }
+            }
             val expenseTransactions = filteredTransactions.filter { it.amount < 0 } // Filter only expenses
             val categorySums = expenseTransactions.groupBy { it.category }
                 .mapValues { (_, trans) -> trans.sumOf { it.amount } }
@@ -272,11 +284,19 @@ class StatisticsActivity : AppCompatActivity() {
                 })
                 topSpendings.sortBy { topSpending -> categoriesOrder.indexOf(topSpending.category) }
 
+                // Atur visibilitas tvNoTransaction berdasarkan apakah topSpendings kosong atau tidak
+                if (topSpendings.isEmpty()) {
+                    binding.tvNoTransaction.visibility = View.VISIBLE
+                    binding.recyclerView.visibility = View.GONE
+                } else {
+                    binding.tvNoTransaction.visibility = View.GONE
+                    binding.recyclerView.visibility = View.VISIBLE
+                }
+
                 adapter.notifyDataSetChanged()
                 binding.progressBarPieChart.visibility = View.GONE
                 binding.progressBarRvTopSpending.visibility = View.GONE
                 binding.pieChart.visibility = View.VISIBLE
-                binding.recyclerView.visibility = View.VISIBLE
                 binding.categoryIndicatorContainer.visibility = View.VISIBLE
             }
         }

@@ -2,6 +2,8 @@ package com.dicoding.econome.activity
 
 import android.os.Build
 import android.os.Bundle
+import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,11 +24,14 @@ import java.time.temporal.ChronoUnit
 class TopSpendingDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTopSpendingDetailsBinding
     private lateinit var adapter: TransactionAdapter
+    private lateinit var tvNoTransaction: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTopSpendingDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        tvNoTransaction = findViewById(R.id.tvNoTransaction)
 
         // Check if the device version is greater than or equal to Lollipop
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -80,6 +85,13 @@ class TopSpendingDetailsActivity : AppCompatActivity() {
         adapter = TransactionAdapter(transactions)
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         binding.recyclerView.adapter = adapter
+        if (transactions.isEmpty()) {
+            tvNoTransaction.visibility = View.VISIBLE
+            binding.recyclerView.visibility = View.GONE
+        } else {
+            tvNoTransaction.visibility = View.GONE
+            binding.recyclerView.visibility = View.VISIBLE
+        }
     }
 
     private suspend fun getTransactionsFromDatabase(category: String, timeRange: String): List<Transaction> {

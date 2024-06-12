@@ -57,6 +57,7 @@
     <string name="transaction">Transaction</string>
     <string name="statistics_title">Statistics</string>
     <string name="greeting">Hello, User!</string>
+    <string name="null_handling_message">No transactions yet</string>
 
 
     <string-array name="time_range">
