@@ -53,7 +53,8 @@ class RegisterActivity : AppCompatActivity() {
         )
         val major = arrayOf(
             "Psychology",
-            "Economics", "Computer Science",
+            "Economics",
+            "Computer Science",
             "Engineering",
             "Biology",
         )

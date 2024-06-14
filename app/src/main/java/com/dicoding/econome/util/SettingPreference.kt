@@ -5,45 +5,67 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.dicoding.econome.response.LoginResponse
-import com.dicoding.econome.response.UserResponse
+import com.dicoding.econome.auth.ProfileData
+import com.dicoding.econome.auth.UpdateProfileRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class SettingPreference private constructor(private val dataStore: DataStore<Preferences>) {
 
-    fun getUserData(): Flow<UserResponse> {
+    // Keys for preferences
+    private val TOKEN = stringPreferencesKey("token")
+    private val USER_ID = stringPreferencesKey("userId")
+    private val NAME = stringPreferencesKey("name")
+    private val USERNAME = stringPreferencesKey("username")
+    private val GENDER = stringPreferencesKey("gender")
+    private val MAJOR = stringPreferencesKey("major")
+    private val AGE = stringPreferencesKey("age")
+    private val STATUS = booleanPreferencesKey("status")
+
+    fun getUserData(): Flow<ProfileData> {
         return dataStore.data.map { preferences ->
-            UserResponse(
-                preferences[TOKEN] ?: "",
-                preferences[STATUS] ?: false,
-                preferences[NAMA] ?: "",
-                preferences[USERID] ?: ""
+            ProfileData(
+                id = preferences[USER_ID]?.toInt() ?: 0,
+                uuid = preferences[USER_ID] ?: "",
+                name = preferences[NAME] ?: "",
+                username = preferences[USERNAME] ?: "",
+                gender = preferences[GENDER] ?: "",
+                major = preferences[MAJOR] ?: "",
+                age = preferences[AGE]?.toInt() ?: 0,
+                created_at = "",
+                updated_at = ""
             )
         }
     }
 
-    suspend fun putUserData(user: LoginResponse?) {
+    suspend fun putUserData(user: UpdateProfileRequest?) {
         dataStore.edit { preferences ->
-            preferences[TOKEN] = user?.loginResult?.token.toString()
-            preferences[STATUS] = user?.error as Boolean
-            preferences[NAMA] = user.loginResult?.name.toString()
-            preferences[USERID] = user.loginResult?.userId.toString()
+            preferences[NAME] = user!!.name
+            preferences[USERNAME] = user.username
+            preferences[GENDER] = user.gender
+            preferences[MAJOR] = user.major
+            preferences[AGE] = user.age.toString()
         }
     }
 
-    suspend fun deleteData() {
+    suspend fun updateProfileData(profile: ProfileData) {
+        dataStore.edit { preferences ->
+            preferences[USER_ID] = profile.uuid
+            preferences[NAME] = profile.name
+            preferences[USERNAME] = profile.username
+            preferences[GENDER] = profile.gender
+            preferences[MAJOR] = profile.major
+            preferences[AGE] = profile.age.toString()
+        }
+    }
+
+    suspend fun clearUserData() {
         dataStore.edit { preferences ->
             preferences.clear()
         }
     }
 
     companion object {
-        private val TOKEN = stringPreferencesKey("tokenuser")
-        private val STATUS = booleanPreferencesKey("statususer")
-        private val NAMA = stringPreferencesKey("namauser")
-        private val USERID = stringPreferencesKey("userid")
-
         @Volatile
         private var INSTANCE: SettingPreference? = null
 

@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.dicoding.econome.auth.RegisterResponse
+import com.dicoding.econome.response.LoginResponse
 import com.dicoding.econome.util.Injection
 import com.dicoding.econome.util.Repository
 import java.io.File
@@ -16,16 +18,30 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     private val mRotate = MutableLiveData<Boolean>().apply { postValue(true) }
     val rotate: LiveData<Boolean> = mRotate
 
-    fun login(email: String, pass: String) = repository.login(email, pass)
+    private val _loginResponse = MutableLiveData<LoginResponse?>()
+    val loginResponse: MutableLiveData<LoginResponse?> = _loginResponse
+
+    private val _registerResponse = MutableLiveData<RegisterResponse?>()
+    val registerResponse: MutableLiveData<RegisterResponse?> = _registerResponse
+
+    fun login(email: String, pass: String) {
+        repository.login(email, pass) { response ->
+            _loginResponse.postValue(response)
+        }
+    }
+
     fun register(
-        nama: String,
+        name: String,
         email: String,
         pass: String,
         age: String,
         major: String,
         gender: String
-    ) =
-        repository.register(nama, email, pass, age, major, gender)
+    ) {
+        repository.register(name, email, pass, age, major, gender) { response ->
+            _registerResponse.postValue(response)
+        }
+    }
 }
 
 class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory {

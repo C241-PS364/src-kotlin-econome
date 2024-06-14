@@ -5,18 +5,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.dicoding.econome.response.LoginResponse
-import com.dicoding.econome.response.UserResponse
+import com.dicoding.econome.auth.ProfileData
+import com.dicoding.econome.auth.UpdateProfileRequest
+
 import com.dicoding.econome.util.SettingPreference
 import kotlinx.coroutines.launch
 
 class SettingViewModel(private val pref: SettingPreference) : ViewModel() {
 
-    fun getThemeSettings(): LiveData<UserResponse> {
+    fun getThemeSettings(): LiveData<ProfileData> {
         return pref.getUserData().asLiveData()
     }
 
-    fun saveThemeSetting(userData: LoginResponse?) {
+    fun saveThemeSetting(userData: UpdateProfileRequest) {
         viewModelScope.launch {
             pref.putUserData(userData)
         }
@@ -24,7 +25,7 @@ class SettingViewModel(private val pref: SettingPreference) : ViewModel() {
 
     fun deleteData() {
         viewModelScope.launch {
-            pref.deleteData()
+            pref.clearUserData()
         }
     }
 }

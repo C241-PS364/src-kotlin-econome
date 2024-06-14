@@ -14,7 +14,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
-import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -28,7 +27,6 @@ import com.dicoding.econome.model.ViewModelFactory
 import com.dicoding.econome.response.Result
 import com.dicoding.econome.util.SettingPreference
 import com.github.mikephil.charting.BuildConfig
-
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
@@ -103,22 +101,20 @@ class LoginActivity : AppCompatActivity() {
                         is Result.Success -> {
                             cancel()
                             if (result.data?.error == false) {
-                                if (binding.passInput.text?.length!! > 7) {
-                                    viewModel.saveThemeSetting(result.data)
-                                    Toast.makeText(
-                                        this@LoginActivity,
-                                        resources.getString(R.string.login),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    startActivity(i)
-                                } else {
-                                    cancel()
-                                    Toast.makeText(
-                                        this@LoginActivity,
-                                        resources.getString(R.string.errorpass),
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
+                                viewModel.saveThemeSetting(result.data)
+                                Toast.makeText(
+                                    this@LoginActivity,
+                                    resources.getString(R.string.login),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                startActivity(i)
+                            } else {
+                                cancel()
+                                Toast.makeText(
+                                    this@LoginActivity,
+                                    result.data?.message ?: resources.getString(R.string.errorpass),
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
                         }
 
@@ -136,8 +132,6 @@ class LoginActivity : AppCompatActivity() {
     private fun playAnimation() {
         binding.apply {
             val title = ObjectAnimator.ofFloat(sign, View.ALPHA, 1f).setDuration(DURATION)
-//            val image = ObjectAnimator.ofFloat(imageView, View.ALPHA, 1f).setDuration(DURATION)
-//            val subtitle = ObjectAnimator.ofFloat(welcome, View.ALPHA, 1f).setDuration(DURATION)
             val email = ObjectAnimator.ofFloat(email, View.ALPHA, 1f).setDuration(DURATION)
             val pass = ObjectAnimator.ofFloat(password, View.ALPHA, 1f).setDuration(DURATION)
             val button = ObjectAnimator.ofFloat(btnLogin, View.ALPHA, 1f).setDuration(DURATION)
@@ -154,13 +148,6 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
-
-//    @Suppress("DEPRECATION")
-//    override fun onBackPressed() {
-//        super.onBackPressed()
-//        finish()
-//        exitProcess(0)
-//    }
 
     companion object {
         const val DURATION: Long = 333
