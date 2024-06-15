@@ -32,15 +32,15 @@ class Repository(private val authService: AuthService, private val database: App
     }
 
     fun register(
-        name: String,
-        email: String,
+        username:String,
         pass: String,
-        age: Int,
-        major: String,
+        name: String,
         gender: String,
+        major: String,
+        age: Int,
         callback: (AuthResponses.RegisterResponse?, String?) -> Unit
     ) {
-        val registerRequest = AuthRequests.RegisterRequest(name, email, pass, gender, major, age)
+        val registerRequest = AuthRequests.RegisterRequest(username, pass, name, gender, major, age)
         authService.register(registerRequest).enqueue(object : Callback<AuthResponses.RegisterResponse> {
             override fun onResponse(call: Call<AuthResponses.RegisterResponse>, response: Response<AuthResponses.RegisterResponse>) {
                 if (response.isSuccessful && response.body() != null) {

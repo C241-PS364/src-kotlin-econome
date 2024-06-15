@@ -2,14 +2,12 @@ package com.dicoding.econome.activity
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -19,7 +17,6 @@ import com.dicoding.econome.databinding.ActivityRegisterBinding
 import com.dicoding.econome.model.MainViewModel
 import com.dicoding.econome.model.ViewModelFactory
 import com.dicoding.econome.response.Result
-import java.util.Calendar
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
@@ -52,62 +49,56 @@ class RegisterActivity : AppCompatActivity() {
         binding.genderInput.setAdapter(genderAdapter)
 
         val majorAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, major)
-        binding.majorEditText.setAdapter(majorAdapter)
+        binding.majorInput.setAdapter(majorAdapter)
 
         binding.apply {
-            ageEditText.setOnClickListener {
-                showDatePickerDialog(ageEditText)
-            }
 
             btnRegist.setOnClickListener {
-                val nama = textInput.text.toString()
-                val email = emailInput.text.toString()
+                val username = usernameInput.text.toString()
                 val pass = passInput.text.toString()
-                val age = ageEditText.text.toString()
-                val major = majorEditText.text.toString()
+                val name = textInput.text.toString()
                 val gender = genderInput.text.toString()
+                val major = majorInput.text.toString()
+                val ageStr = ageInput.text.toString()
                 when {
-                    nama.isEmpty() -> {
-                        textInput.error = resources.getString(R.string.emptyname)
+                    username.isEmpty() -> {
+                        usernameInput.error = resources.getString(R.string.emptymail)
                     }
-
-                    email.isEmpty() -> {
-                        emailInput.error = resources.getString(R.string.emptymail)
-                    }
-
                     pass.isEmpty() -> {
                         passInput.error = resources.getString(R.string.emptypass)
                     }
-
+                    name.isEmpty() -> {
+                        textInput.error = resources.getString(R.string.emptyname)
+                    }
+                    gender.isEmpty() -> {
+                        genderInput.error = resources.getString(R.string.emptygender)
+                    }
+                    major.isEmpty() -> {
+                        majorInput.error = resources.getString(R.string.emptymajor)
+                    }
+                    ageStr.isEmpty() -> {
+                        ageInput.error = resources.getString(R.string.emptyage)
+                    }
                     else -> {
-                        register(nama, email, pass, age, major, gender)
+                        val age = ageStr.toIntOrNull()
+                        if (age != null) {
+                            register(username, pass, name, gender, major, age)
+                        } else {
+                            ageInput.error = resources.getString(R.string.invalidage)
+                        }
                     }
                 }
             }
         }
     }
 
-    private fun showDatePickerDialog(editText: EditText) {
-        val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-        val datePickerDialog = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-            val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
-            editText.setText(selectedDate)
-        }, year, month, day)
-
-        datePickerDialog.show()
-    }
-
     private fun register(
-        nama: String,
-        email: String,
+        username: String,
         pass: String,
-        age: String,
+        name: String,
+        gender: String,
         major: String,
-        gender: String
+        age: Int
     ) {
         dialog = Dialog(this)
         dialog.setContentView(R.layout.loading)
@@ -117,7 +108,7 @@ class RegisterActivity : AppCompatActivity() {
         }
         val i = Intent(this, LoginActivity::class.java)
 
-        mainViewModel.register(nama, email, pass, age.toInt(), major, gender)
+        mainViewModel.register(username, pass, name, gender, major, age)
         mainViewModel.registerResponse.observe(this) { result ->
             dialog.apply {
                 when (result) {
@@ -129,7 +120,7 @@ class RegisterActivity : AppCompatActivity() {
                         cancel()
                         val registerResponse = result.data
                         if (!registerResponse.error) {
-                            if (binding.passInput.text?.length!! > 7) {
+                            if (pass.length > 7) {
                                 Toast.makeText(
                                     this@RegisterActivity,
                                     resources.getString(R.string.regist),

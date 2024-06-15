@@ -30,15 +30,15 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     }
 
     fun register(
-        name: String,
-        email: String,
+        username:String,
         pass: String,
-        age: Int,
+        name: String,
+        gender: String,
         major: String,
-        gender: String
+        age: Int
     ) {
         _registerResponse.value = Result.Loading
-        repository.register(name, email, pass, age, major, gender) { response, error ->
+        repository.register(username, pass, name, gender, major, age) { response, error ->
             if (error != null || response == null) {
                 _registerResponse.postValue(Result.Error(error ?: "Unknown error"))
             } else {

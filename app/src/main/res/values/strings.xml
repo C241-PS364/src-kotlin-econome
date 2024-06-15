@@ -43,12 +43,16 @@
     <string name="messagelogin">Dont have an account yet?</string>
     <string name="name">Enter your name</string>
     <string name="major">Enter your major</string>
-    <string name="age">Enter your date of birth</string>
+    <string name="age">Enter your age</string>
     <string name="gender">Enter your gender</string>
     <string name="password">Enter your password</string>
     <string name="emptymail">Email cannot be empty</string>
     <string name="emptyname">Name cannot be empty</string>
     <string name="emptypass">Password cannot be empty</string>
+    <string name="emptygender">Gender cannot be empty</string>
+    <string name="emptymajor">Major cannot be empty</string>
+    <string name="emptyage">Age cannot be empty</string>
+    <string name="invalidage">Age invalid</string>
     <string name="logout">Are you sure you want to log out?</string>
     <string name="wait">Please wait...</string>
     <string name="permit">Permission denied</string>
