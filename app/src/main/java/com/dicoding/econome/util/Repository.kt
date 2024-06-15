@@ -1,5 +1,6 @@
 package com.dicoding.econome.util
 
+import android.util.Log
 import com.dicoding.econome.auth.AuthRequests
 import com.dicoding.econome.auth.AuthResponses
 import com.dicoding.econome.auth.AuthService
@@ -8,17 +9,24 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class Repository(private val authService: AuthService, database: AppDatabase) {
+class Repository(private val authService: AuthService, private val database: AppDatabase) {
 
-    fun login(email: String, pass: String, callback: (AuthResponses.LoginResponse?) -> Unit) {
-        val loginRequest = AuthRequests.LoginRequest(email, pass)
-        authService.login(loginRequest).enqueue(object : Callback<AuthResponses.LoginResponse> {
+    fun login(username: String, password: String, callback: (AuthResponses.LoginResponse?, String?) -> Unit) {
+        authService.login(AuthRequests.LoginRequest(username, password)).enqueue(object : Callback<AuthResponses.LoginResponse> {
             override fun onResponse(call: Call<AuthResponses.LoginResponse>, response: Response<AuthResponses.LoginResponse>) {
-                callback(response.body())
+                if (response.isSuccessful) {
+                    Log.d("Login", "Response: ${response.body()}")
+                    callback(response.body(), null)
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.d("Login", "Error: $errorBody")
+                    callback(null, "Login failed")
+                }
             }
 
             override fun onFailure(call: Call<AuthResponses.LoginResponse>, t: Throwable) {
-                callback(null)
+                Log.d("Login", "Failure: ${t.message}")
+                callback(null, t.message)
             }
         })
     }
@@ -27,19 +35,23 @@ class Repository(private val authService: AuthService, database: AppDatabase) {
         name: String,
         email: String,
         pass: String,
-        age: String,
+        age: Int,
         major: String,
         gender: String,
-        callback: (AuthResponses.AuthResponse?) -> Unit
+        callback: (AuthResponses.RegisterResponse?, String?) -> Unit
     ) {
-        val registerRequest = AuthRequests.RegisterRequest(name, email, pass, "", gender, major, age.toInt())
-        authService.register(registerRequest).enqueue(object : Callback<AuthResponses.AuthResponse> {
-            override fun onResponse(call: Call<AuthResponses.AuthResponse>, response: Response<AuthResponses.AuthResponse>) {
-                callback(response.body())
+        val registerRequest = AuthRequests.RegisterRequest(name, email, pass, gender, major, age)
+        authService.register(registerRequest).enqueue(object : Callback<AuthResponses.RegisterResponse> {
+            override fun onResponse(call: Call<AuthResponses.RegisterResponse>, response: Response<AuthResponses.RegisterResponse>) {
+                if (response.isSuccessful && response.body() != null) {
+                    callback(response.body(), null)
+                } else {
+                    callback(null, "Registration failed")
+                }
             }
 
-            override fun onFailure(call: Call<AuthResponses.AuthResponse>, t: Throwable) {
-                callback(null)
+            override fun onFailure(call: Call<AuthResponses.RegisterResponse>, t: Throwable) {
+                callback(null, t.message)
             }
         })
     }

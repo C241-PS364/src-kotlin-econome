@@ -6,19 +6,16 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface AuthService {
-    @POST("/auth/register")
-    fun register(@Body request: RegisterRequest
-    ): Call<RegisterResponse>
 
-    @POST("/auth/login")
-    fun login(@Body request: LoginRequest
-    ): Call<LoginResponse>
+    @POST("auth/register")
+    fun register(@Body request: AuthRequests.RegisterRequest): Call<AuthResponses.RegisterResponse>
 
-    @POST("/auth/refresh-token")
-    fun refreshToken(@Body request: RefreshTokenRequest
-    ): Call<RefreshTokenResponse>
+    @POST("auth/login")
+    fun login(@Body request: AuthRequests.LoginRequest): Call<AuthResponses.LoginResponse>
 
-    @POST("/auth/logout")
-    fun logout(@Header("Authorization") token: String
-    ): Call<LogoutResponse>
+    @POST("auth/refresh-token")
+    fun refreshToken(@Body request: AuthRequests.RefreshTokenRequest): Call<AuthResponses.RefreshTokenResponse>
+
+    @POST("auth/logout")
+    fun logout(@Header("Authorization") token: String): Call<AuthResponses.LogoutResponse>
 }

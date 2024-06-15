@@ -6,7 +6,6 @@ import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -15,7 +14,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
-import androidx.core.content.ContextCompat
 import com.dicoding.econome.R
 import com.dicoding.econome.databinding.ActivityRegisterBinding
 import com.dicoding.econome.model.MainViewModel
@@ -39,7 +37,6 @@ class RegisterActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         playAnimation()
 
-
         binding.login.setOnClickListener {
             val i = Intent(this, LoginActivity::class.java)
             startActivity(
@@ -47,23 +44,15 @@ class RegisterActivity : AppCompatActivity() {
                 ActivityOptionsCompat.makeSceneTransitionAnimation(this@RegisterActivity).toBundle()
             )
         }
-        val gender = arrayOf(
-            "Male",
-            "Female",
-        )
-        val major = arrayOf(
-            "Psychology",
-            "Economics",
-            "Computer Science",
-            "Engineering",
-            "Biology",
-        )
 
-        val genderadapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, gender)
-        binding.genderInput.setAdapter(genderadapter)
+        val gender = arrayOf("Male", "Female")
+        val major = arrayOf("Psychology", "Economics", "Computer Science", "Engineering", "Biology")
 
-        val majoradapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, major)
-        binding.majorEditText.setAdapter(majoradapter)
+        val genderAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, gender)
+        binding.genderInput.setAdapter(genderAdapter)
+
+        val majorAdapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, major)
+        binding.majorEditText.setAdapter(majorAdapter)
 
         binding.apply {
             ageEditText.setOnClickListener {
@@ -98,18 +87,16 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-
     private fun showDatePickerDialog(editText: EditText) {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-        val datePickerDialog =
-            DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-                val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
-                editText.setText(selectedDate)
-            }, year, month, day)
+        val datePickerDialog = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+            val selectedDate = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+            editText.setText(selectedDate)
+        }, year, month, day)
 
         datePickerDialog.show()
     }
@@ -130,47 +117,47 @@ class RegisterActivity : AppCompatActivity() {
         }
         val i = Intent(this, LoginActivity::class.java)
 
-        mainViewModel.register(nama, email, pass, age, major, gender).observe(this) { result ->
-            if (result != null) {
-                dialog.apply {
-                    when (result) {
-                        is Result.Loading -> {
-                            show()
-                        }
+        mainViewModel.register(nama, email, pass, age.toInt(), major, gender)
+        mainViewModel.registerResponse.observe(this) { result ->
+            dialog.apply {
+                when (result) {
+                    is Result.Loading -> {
+                        show()
+                    }
 
-                        is Result.Success -> {
-                            cancel()
-                            if (result.data?.error == false) {
-                                if (binding.passInput.text?.length!! > 7) {
-                                    Toast.makeText(
-                                        this@RegisterActivity,
-                                        resources.getString(R.string.regist),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    startActivity(i)
-                                } else {
-                                    cancel()
-                                    Toast.makeText(
-                                        this@RegisterActivity,
-                                        resources.getString(R.string.errorpass),
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
+                    is Result.Success -> {
+                        cancel()
+                        val registerResponse = result.data
+                        if (!registerResponse.error) {
+                            if (binding.passInput.text?.length!! > 7) {
+                                Toast.makeText(
+                                    this@RegisterActivity,
+                                    resources.getString(R.string.regist),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                startActivity(i)
                             } else {
                                 cancel()
                                 Toast.makeText(
                                     this@RegisterActivity,
-                                    result.data?.message.toString(),
+                                    resources.getString(R.string.errorpass),
                                     Toast.LENGTH_LONG
                                 ).show()
                             }
-                        }
-
-                        is Result.Error -> {
+                        } else {
                             cancel()
-                            Toast.makeText(this@RegisterActivity, result.error, Toast.LENGTH_LONG)
-                                .show()
+                            Toast.makeText(
+                                this@RegisterActivity,
+                                registerResponse.message,
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
+                    }
+
+                    is Result.Error -> {
+                        cancel()
+                        Toast.makeText(this@RegisterActivity, result.error, Toast.LENGTH_LONG)
+                            .show()
                     }
                 }
             }
@@ -180,8 +167,6 @@ class RegisterActivity : AppCompatActivity() {
     private fun playAnimation() {
         binding.apply {
             val title = ObjectAnimator.ofFloat(sign, View.ALPHA, 1f).setDuration(DURATION)
-//            val image = ObjectAnimator.ofFloat(imageView, View.ALPHA, 1f).setDuration(DURATION)
-//            val subtitle = ObjectAnimator.ofFloat(welcome, View.ALPHA, 1f).setDuration(DURATION)
             val email = ObjectAnimator.ofFloat(email, View.ALPHA, 1f).setDuration(DURATION)
             val name = ObjectAnimator.ofFloat(name, View.ALPHA, 1f).setDuration(DURATION)
             val pass = ObjectAnimator.ofFloat(password, View.ALPHA, 1f).setDuration(DURATION)

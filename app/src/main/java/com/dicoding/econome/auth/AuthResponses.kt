@@ -1,29 +1,33 @@
 package com.dicoding.econome.auth
 
-data class RegisterResponse(
-    val error: Boolean,
-    val message: String
-)
+import com.google.gson.annotations.SerializedName
 
-data class LoginResponse(
-    val error: Boolean,
-    val message: String,
-    val data: LoginResult
-)
+class AuthResponses {
+    data class RegisterResponse(
+        val error: Boolean,
+        val message: String
+    )
 
-data class LoginResult(
-    val userId: String,
-    val name: String,
-    val token: String,
-    val refreshToken: String
-)
+    data class LoginResponse(
+        @SerializedName("error") val error: Boolean,
+        @SerializedName("message") val message: String,
+        @SerializedName("data") val data: UserData
+    )
 
-data class RefreshTokenResponse(
-    val error: Boolean,
-    val token: String
-)
+    data class UserData(
+        @SerializedName("userId") val userId: String,
+        @SerializedName("name") val name: String,
+        @SerializedName("token") val token: String,
+        @SerializedName("refreshToken") val refreshToken: String
+    )
 
-data class LogoutResponse(
-    val error: Boolean,
-    val message: String
-)
+    data class RefreshTokenResponse(
+        val error: Boolean,
+        val token: String
+    )
+
+    data class LogoutResponse(
+        val error: Boolean,
+        val message: String
+    )
+}

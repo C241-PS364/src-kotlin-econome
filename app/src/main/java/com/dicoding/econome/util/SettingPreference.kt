@@ -5,14 +5,13 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
-import com.dicoding.econome.auth.ProfileData
-import com.dicoding.econome.auth.UpdateProfileRequest
+import com.dicoding.econome.auth.UserResponse.ProfileData
+import com.dicoding.econome.auth.UserResponse.UpdateProfileRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class SettingPreference private constructor(private val dataStore: DataStore<Preferences>) {
 
-    // Keys for preferences
     private val TOKEN = stringPreferencesKey("token")
     private val USER_ID = stringPreferencesKey("userId")
     private val NAME = stringPreferencesKey("name")
@@ -31,7 +30,8 @@ class SettingPreference private constructor(private val dataStore: DataStore<Pre
                 username = preferences[USERNAME] ?: "",
                 gender = preferences[GENDER] ?: "",
                 major = preferences[MAJOR] ?: "",
-                age = preferences[AGE]?.toInt() ?: 0,
+                age = preferences[AGE]?: "",
+                token = preferences[TOKEN] ?: "", // Add this line
                 created_at = "",
                 updated_at = ""
             )

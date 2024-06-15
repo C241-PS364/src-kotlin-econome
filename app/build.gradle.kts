@@ -66,6 +66,7 @@ dependencies {
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
     implementation("com.jakewharton.timber:timber:4.7.1")
+    implementation ("joda-time:joda-time:2.10.13")
 
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")

@@ -107,9 +107,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:focusable="false"
             android:hint="@string/age"
-            android:inputType="none"
+            android:inputType="number"
             android:saveEnabled="true" />
     </com.google.android.material.textfield.TextInputLayout>
 

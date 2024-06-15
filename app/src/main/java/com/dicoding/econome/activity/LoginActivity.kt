@@ -6,7 +6,6 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
@@ -59,11 +58,11 @@ class LoginActivity : AppCompatActivity() {
         }
         binding.apply {
             btnLogin.setOnClickListener {
-                val email = emailInput.text.toString()
+                val username = usernameInput.text.toString()
                 val pass = passInput.text.toString()
                 when {
-                    email.isEmpty() -> {
-                        emailInput.error = resources.getString(R.string.emptymail)
+                    username.isEmpty() -> {
+                        usernameInput.error = resources.getString(R.string.emptyusername)
                     }
 
                     pass.isEmpty() -> {
@@ -71,14 +70,14 @@ class LoginActivity : AppCompatActivity() {
                     }
 
                     else -> {
-                        login(email, pass)
+                        login(username, pass)
                     }
                 }
             }
         }
     }
 
-    private fun login(email: String, pass: String) {
+    private fun login(username: String, pass: String) {
         val i = Intent(this, MainActivity::class.java)
         val pref = this.dataStore
         val data = SettingPreference.getInstance(pref)
@@ -90,39 +89,38 @@ class LoginActivity : AppCompatActivity() {
         if (dialog.window != null) {
             dialog.window?.setBackgroundDrawable(ColorDrawable(0))
         }
-        mainViewModel.login(email, pass).observe(this) { result ->
-            if (result != null) {
-                dialog.apply {
-                    when (result) {
-                        is Result.Loading -> {
-                            show()
-                        }
+        mainViewModel.login(username, pass)
+        mainViewModel.loginResponse.observe(this) { result ->
+            dialog.apply {
+                when (result) {
+                    is Result.Loading -> {
+                        show()
+                    }
 
-                        is Result.Success -> {
+                    is Result.Success -> {
+                        cancel()
+                        val loginResponse = result.data
+                        if (loginResponse?.error == false) {
+                            Toast.makeText(
+                                this@LoginActivity,
+                                resources.getString(R.string.login),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            startActivity(i)
+                        } else {
                             cancel()
-                            if (result.data?.error == false) {
-                                viewModel.saveThemeSetting(result.data)
-                                Toast.makeText(
-                                    this@LoginActivity,
-                                    resources.getString(R.string.login),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                startActivity(i)
-                            } else {
-                                cancel()
-                                Toast.makeText(
-                                    this@LoginActivity,
-                                    result.data?.message ?: resources.getString(R.string.errorpass),
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
+                            Toast.makeText(
+                                this@LoginActivity,
+                                loginResponse?.message ?: resources.getString(R.string.errorpass),
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
+                    }
 
-                        is Result.Error -> {
-                            cancel()
-                            Toast.makeText(this@LoginActivity, result.error, Toast.LENGTH_LONG)
-                                .show()
-                        }
+                    is Result.Error -> {
+                        cancel()
+                        Toast.makeText(this@LoginActivity, result.error, Toast.LENGTH_LONG)
+                            .show()
                     }
                 }
             }
@@ -132,7 +130,7 @@ class LoginActivity : AppCompatActivity() {
     private fun playAnimation() {
         binding.apply {
             val title = ObjectAnimator.ofFloat(sign, View.ALPHA, 1f).setDuration(DURATION)
-            val email = ObjectAnimator.ofFloat(email, View.ALPHA, 1f).setDuration(DURATION)
+            val username = ObjectAnimator.ofFloat(username, View.ALPHA, 1f).setDuration(DURATION)
             val pass = ObjectAnimator.ofFloat(password, View.ALPHA, 1f).setDuration(DURATION)
             val button = ObjectAnimator.ofFloat(btnLogin, View.ALPHA, 1f).setDuration(DURATION)
             val sub1 = ObjectAnimator.ofFloat(signup2, View.ALPHA, 1f).setDuration(DURATION)
@@ -143,7 +141,7 @@ class LoginActivity : AppCompatActivity() {
             }
 
             AnimatorSet().apply {
-                playSequentially(title, email, pass, button, together)
+                playSequentially(title, username, pass, button, together)
                 start()
             }
         }
