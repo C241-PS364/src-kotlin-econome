@@ -1,5 +1,6 @@
 package com.dicoding.econome.util
 
+import android.content.Context
 import android.util.Log
 import com.dicoding.econome.auth.AuthRequests
 import com.dicoding.econome.auth.AuthResponses
@@ -11,11 +12,24 @@ import retrofit2.Response
 
 class Repository(private val authService: AuthService, private val database: AppDatabase) {
 
-    fun login(username: String, password: String, callback: (AuthResponses.LoginResponse?, String?) -> Unit) {
+    fun login(context: Context, username: String, password: String, callback: (AuthResponses.LoginResponse?, String?) -> Unit) {
         authService.login(AuthRequests.LoginRequest(username, password)).enqueue(object : Callback<AuthResponses.LoginResponse> {
             override fun onResponse(call: Call<AuthResponses.LoginResponse>, response: Response<AuthResponses.LoginResponse>) {
                 if (response.isSuccessful) {
+                    val token = response.body()?.data?.token
                     Log.d("Login", "Response: ${response.body()}")
+                    Log.d("Login", "Token: $token")
+
+                    // Save the token in SharedPreferences
+                    val sharedPreferences = context.getSharedPreferences("UserData", Context.MODE_PRIVATE)
+                    val editor = sharedPreferences.edit()
+                    editor.putString("token", token)
+                    editor.apply()
+
+                    // Log the saved token
+                    val savedToken = sharedPreferences.getString("token", null)
+                    Log.d("Login", "Saved token: $savedToken")
+
                     callback(response.body(), null)
                 } else {
                     val errorBody = response.errorBody()?.string()

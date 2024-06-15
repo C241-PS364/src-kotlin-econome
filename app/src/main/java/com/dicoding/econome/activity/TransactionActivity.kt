@@ -1,12 +1,13 @@
 package com.dicoding.econome.activity
 
 import android.app.ActivityOptions
+import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.RelativeSizeSpan
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -20,9 +21,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.dicoding.econome.R
 import com.dicoding.econome.adapter.TransactionAdapter
+import com.dicoding.econome.auth.ApiConfig
 import com.dicoding.econome.database.AppDatabase
 import com.dicoding.econome.database.entity.Transaction
 import com.dicoding.econome.databinding.ActivityTransactionBinding
+import com.dicoding.econome.income.IncomeRepository
+import com.dicoding.econome.income.IncomeResponses
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.GlobalScope
@@ -93,8 +97,10 @@ class TransactionActivity : AppCompatActivity() {
         binding.bottomNavigationView.itemTextColor =
             ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
 
+        val isIncome = intent.getBooleanExtra("IS_INCOME", false)
         binding.addTransactionFAB.setOnClickListener {
             val intent = Intent(this, AddTransactionActivity::class.java)
+            intent.putExtra("IS_INCOME", isIncome)
             startActivity(intent)
         }
 
@@ -289,6 +295,33 @@ class TransactionActivity : AppCompatActivity() {
 
         GlobalScope.launch {
             db.transactionDao().delete(transaction)
+
+            // Delete the income from the server
+            if (transaction.amount > 0 && transaction.incomeId != null) { // Check if the transaction is an income and incomeId is not null
+                val sharedPreferences = getApplicationContext().getSharedPreferences("UserData", Context.MODE_PRIVATE)
+                val token = sharedPreferences.getString("token", null)
+                if (token != null) {
+                    Log.d("SharedPreferences", "Retrieved token delete: $token")
+                    val incomeService = ApiConfig.incomeService
+                    val database = AppDatabase.getDatabase(this@TransactionActivity)
+                    val incomeRepository = IncomeRepository(incomeService, database)
+                    incomeRepository.deleteIncome(
+                        "Bearer $token",
+                        transaction.incomeId
+                    ) { response: IncomeResponses.DeleteIncomeResponse?, error: String? ->
+                        if (response != null) {
+                            // Handle the response
+                            Log.d("Income", "Income deleted successfully: ${response.message}")
+                        } else {
+                            // Handle the error
+                            Log.d("Income", "Failed to delete income: $error")
+                        }
+                    }
+                } else {
+                    // Handle the case when the token is null
+                    Log.d("Income", "Token is null")
+                }
+            }
 
             transactions = transactions.filter { it.id != transaction.id }
             runOnUiThread {

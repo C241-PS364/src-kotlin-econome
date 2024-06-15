@@ -1,5 +1,6 @@
 package com.dicoding.econome.auth
 
+import com.dicoding.econome.income.IncomeService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -16,12 +17,19 @@ object ApiConfig {
         .addInterceptor(logging)
         .build()
 
-    val api: AuthService by lazy {
+    private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(AuthService::class.java)
+    }
+
+    val api: AuthService by lazy {
+        retrofit.create(AuthService::class.java)
+    }
+
+    val incomeService: IncomeService by lazy {
+        retrofit.create(IncomeService::class.java)
     }
 }

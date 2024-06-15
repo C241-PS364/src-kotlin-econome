@@ -10,7 +10,7 @@ import com.dicoding.econome.response.Result
 import com.dicoding.econome.util.Injection
 import com.dicoding.econome.util.Repository
 
-class MainViewModel(private val repository: Repository) : ViewModel() {
+class MainViewModel(private val context: Context, private val repository: Repository) : ViewModel() {
 
     private val _loginResponse = MutableLiveData<Result<AuthResponses.LoginResponse>>()
     val loginResponse: LiveData<Result<AuthResponses.LoginResponse>> = _loginResponse
@@ -20,7 +20,7 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
 
     fun login(username: String, pass: String) {
         _loginResponse.value = Result.Loading
-        repository.login(username, pass) { response, error ->
+        repository.login(context, username, pass) { response, error ->
             if (error != null || response == null) {
                 _loginResponse.postValue(Result.Error(error ?: "Unknown error"))
             } else {
@@ -52,7 +52,7 @@ class ViewModelFactory(private val context: Context) : ViewModelProvider.Factory
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
-            return MainViewModel(Injection.provideRepo(context)) as T
+            return MainViewModel(context, Injection.provideRepo(context)) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: " + modelClass.name)
     }

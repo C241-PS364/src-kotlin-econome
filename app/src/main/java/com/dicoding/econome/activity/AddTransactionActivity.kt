@@ -1,19 +1,24 @@
 package com.dicoding.econome.activity
 
 import android.app.DatePickerDialog
-import android.os.Build
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.widget.doOnTextChanged
 import com.dicoding.econome.R
+import com.dicoding.econome.auth.ApiConfig
 import com.dicoding.econome.database.AppDatabase
 import com.dicoding.econome.database.entity.Transaction
 import com.dicoding.econome.databinding.ActivityAddTransactionBinding
+import com.dicoding.econome.income.IncomeRepository
+import com.dicoding.econome.income.IncomeRequests
+import com.dicoding.econome.income.IncomeResponses
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.util.Calendar
@@ -77,12 +82,13 @@ class AddTransactionActivity : AppCompatActivity() {
 
             DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
                 val selectedDate =
-                    String.format("%02d-%02d-%d", selectedDay, selectedMonth + 1, selectedYear)
+                    String.format("%d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
                 binding.dateButton.text = selectedDate
             }, year, month, day).show()
         }
 
         binding.addTransactionButton.setOnClickListener {
+            Log.d("addTransaction", "Add Transaction Button Clicked")
             val label = binding.labelInput.text.toString()
             var amount = binding.amountInput.text.toString().toDoubleOrNull()
             val category = if (isIncome) "" else binding.categoryInput.text.toString()
@@ -102,10 +108,41 @@ class AddTransactionActivity : AppCompatActivity() {
                 if (!isIncome) {
                     amount = -Math.abs(amount!!)
                 }
-                val transaction = Transaction(0, label, amount, category, date = date)
-                insert(transaction)
+                var transaction = Transaction(0, label, amount, category, date = date)
+
+                if (isIncome) {
+                    // If the transaction is an income, make the API call first
+                    val sharedPreferences = getApplicationContext().getSharedPreferences("UserData", Context.MODE_PRIVATE)
+                    val token = sharedPreferences.getString("token", null)
+                    if (token != null) {
+                        val incomeService = ApiConfig.incomeService
+                        val database = AppDatabase.getDatabase(this)
+                        val incomeRepository = IncomeRepository(incomeService, database)
+                        val request = IncomeRequests.AddIncomeRequest(date, label, amount.toInt())
+                        incomeRepository.addIncome("Bearer $token", request) { response: IncomeResponses.AddIncomeResponse?, error: String? ->
+                            if (response != null) {
+                                // If the API call is successful, create a new Transaction object with the incomeId and insert it into the local database
+                                transaction = Transaction(0, label, amount, category, date = date, incomeId = response.data.id)
+                                insert(transaction)
+                            } else {
+                                Log.d("Income", "Failed to add income: $error")
+                                Toast.makeText(this, "Failed to add income", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    } else {
+                        Log.d("Income", "Token is null")
+                        Toast.makeText(this, "Token is null", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    // If the transaction is not an income, insert it into the local database immediately
+                    insert(transaction)
+                }
+                val intent = Intent(this, TransactionActivity::class.java)
+                intent.putExtra("IS_INCOME", isIncome)
+                startActivity(intent)
             }
         }
+
         binding.closeButton.setOnClickListener {
             finish()
         }
