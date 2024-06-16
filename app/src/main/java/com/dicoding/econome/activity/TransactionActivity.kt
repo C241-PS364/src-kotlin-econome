@@ -20,11 +20,13 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.dicoding.econome.R
+import com.dicoding.econome.activity.expense.ExpenseResponses
 import com.dicoding.econome.adapter.TransactionAdapter
 import com.dicoding.econome.auth.ApiConfig
 import com.dicoding.econome.database.AppDatabase
 import com.dicoding.econome.database.entity.Transaction
 import com.dicoding.econome.databinding.ActivityTransactionBinding
+import com.dicoding.econome.expense.ExpenseRepository
 import com.dicoding.econome.income.IncomeRepository
 import com.dicoding.econome.income.IncomeResponses
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -301,7 +303,6 @@ class TransactionActivity : AppCompatActivity() {
                 val sharedPreferences = getApplicationContext().getSharedPreferences("UserData", Context.MODE_PRIVATE)
                 val token = sharedPreferences.getString("token", null)
                 if (token != null) {
-                    Log.d("SharedPreferences", "Retrieved token delete: $token")
                     val incomeService = ApiConfig.incomeService
                     val database = AppDatabase.getDatabase(this@TransactionActivity)
                     val incomeRepository = IncomeRepository(incomeService, database)
@@ -310,16 +311,36 @@ class TransactionActivity : AppCompatActivity() {
                         transaction.incomeId
                     ) { response: IncomeResponses.DeleteIncomeResponse?, error: String? ->
                         if (response != null) {
-                            // Handle the response
                             Log.d("Income", "Income deleted successfully: ${response.message}")
                         } else {
-                            // Handle the error
                             Log.d("Income", "Failed to delete income: $error")
                         }
                     }
                 } else {
-                    // Handle the case when the token is null
                     Log.d("Income", "Token is null")
+                }
+            }
+
+            // Delete the expense from the server
+            if (transaction.amount < 0 && transaction.expenseId != null) { // Check if the transaction is an expense and expenseId is not null
+                val sharedPreferences = getApplicationContext().getSharedPreferences("UserData", Context.MODE_PRIVATE)
+                val token = sharedPreferences.getString("token", null)
+                if (token != null) {
+                    val expenseService = ApiConfig.expenseService
+                    val database = AppDatabase.getDatabase(this@TransactionActivity)
+                    val expenseRepository = ExpenseRepository(expenseService, database)
+                    expenseRepository.deleteExpense(
+                        "Bearer $token",
+                        transaction.expenseId
+                    ) { response: ExpenseResponses.DeleteExpenseResponse?, error: String? ->
+                        if (response != null) {
+                            Log.d("Expense", "Expense deleted successfully: ${response.message}")
+                        } else {
+                            Log.d("Expense", "Failed to delete expense: $error")
+                        }
+                    }
+                } else {
+                    Log.d("Expense", "Token is null")
                 }
             }
 

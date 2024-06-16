@@ -12,10 +12,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import com.dicoding.econome.R
+import com.dicoding.econome.activity.expense.ExpenseResponses
 import com.dicoding.econome.auth.ApiConfig
 import com.dicoding.econome.database.AppDatabase
 import com.dicoding.econome.database.entity.Transaction
 import com.dicoding.econome.databinding.ActivityAddTransactionBinding
+import com.dicoding.econome.expense.ExpenseRepository
+import com.dicoding.econome.expense.ExpenseRequests
 import com.dicoding.econome.income.IncomeRepository
 import com.dicoding.econome.income.IncomeRequests
 import com.dicoding.econome.income.IncomeResponses
@@ -88,7 +91,6 @@ class AddTransactionActivity : AppCompatActivity() {
         }
 
         binding.addTransactionButton.setOnClickListener {
-            Log.d("addTransaction", "Add Transaction Button Clicked")
             val label = binding.labelInput.text.toString()
             var amount = binding.amountInput.text.toString().toDoubleOrNull()
             val category = if (isIncome) "" else binding.categoryInput.text.toString()
@@ -112,21 +114,35 @@ class AddTransactionActivity : AppCompatActivity() {
 
                 if (isIncome) {
                     // If the transaction is an income, make the API call first
-                    val sharedPreferences = getApplicationContext().getSharedPreferences("UserData", Context.MODE_PRIVATE)
+                    val sharedPreferences = getApplicationContext().getSharedPreferences(
+                        "UserData",
+                        Context.MODE_PRIVATE
+                    )
                     val token = sharedPreferences.getString("token", null)
                     if (token != null) {
                         val incomeService = ApiConfig.incomeService
                         val database = AppDatabase.getDatabase(this)
                         val incomeRepository = IncomeRepository(incomeService, database)
                         val request = IncomeRequests.AddIncomeRequest(date, label, amount.toInt())
-                        incomeRepository.addIncome("Bearer $token", request) { response: IncomeResponses.AddIncomeResponse?, error: String? ->
+                        incomeRepository.addIncome(
+                            "Bearer $token",
+                            request
+                        ) { response: IncomeResponses.AddIncomeResponse?, error: String? ->
                             if (response != null) {
                                 // If the API call is successful, create a new Transaction object with the incomeId and insert it into the local database
-                                transaction = Transaction(0, label, amount, category, date = date, incomeId = response.data.id)
+                                transaction = Transaction(
+                                    0,
+                                    label,
+                                    amount,
+                                    category,
+                                    date = date,
+                                    incomeId = response.data.id
+                                )
                                 insert(transaction)
                             } else {
                                 Log.d("Income", "Failed to add income: $error")
-                                Toast.makeText(this, "Failed to add income", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, "Failed to add income", Toast.LENGTH_SHORT)
+                                    .show()
                             }
                         }
                     } else {
@@ -134,8 +150,59 @@ class AddTransactionActivity : AppCompatActivity() {
                         Toast.makeText(this, "Token is null", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    // If the transaction is not an income, insert it into the local database immediately
-                    insert(transaction)
+                    // If the transaction is an expense, make the API call first
+                    val sharedPreferences = getApplicationContext().getSharedPreferences(
+                        "UserData",
+                        Context.MODE_PRIVATE
+                    )
+                    val token = sharedPreferences.getString("token", null)
+                    if (token != null) {
+                        val expenseService = ApiConfig.expenseService
+                        val database = AppDatabase.getDatabase(this)
+                        val expenseRepository = ExpenseRepository(expenseService, database)
+
+                        val categories = mapOf(
+                            "Food" to 1,
+                            "Housing" to 2,
+                            "Entertainment" to 3,
+                            "Health" to 13,
+                            "Transportation" to 14,
+                            "Other" to 15
+                        )
+
+                        val categoryId = categories[category]
+                            ?: 0 // Use 0 as default if the category is not found in the map
+                        val request = ExpenseRequests.AddExpenseRequest(
+                            date,
+                            label,
+                            categoryId,
+                            amount.toInt()
+                        ) // Assuming category is an integer ID
+                        expenseRepository.addExpense(
+                            "Bearer $token",
+                            request
+                        ) { response: ExpenseResponses.AddExpenseResponse?, error: String? ->
+                            if (response != null) {
+                                // If the API call is successful, create a new Transaction object with the expenseId and insert it into the local database
+                                val expenseId = response.data.id
+                                transaction = Transaction(
+                                    0,
+                                    label,
+                                    amount,
+                                    category,
+                                    date = date,
+                                    expenseId = expenseId
+                                )
+                                insert(transaction)
+                            } else {
+                                Log.d("Expense", "Failed to add expense: $error")
+                                Toast.makeText(this, "Failed to add expense", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    } else {
+                        Log.d("Expense", "Token is null")
+                        Toast.makeText(this, "Token is null", Toast.LENGTH_SHORT).show()
+                    }
                 }
                 val intent = Intent(this, TransactionActivity::class.java)
                 intent.putExtra("IS_INCOME", isIncome)

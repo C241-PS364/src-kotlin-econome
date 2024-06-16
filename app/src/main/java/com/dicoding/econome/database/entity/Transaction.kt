@@ -11,7 +11,8 @@ data class Transaction(
     val amount: Double,
     val category: String = "",
     val date: String,
-    val incomeId: Int? = null
+    val incomeId: Int? = null,
+    val expenseId: Int? = null
 ) {
 
 }
