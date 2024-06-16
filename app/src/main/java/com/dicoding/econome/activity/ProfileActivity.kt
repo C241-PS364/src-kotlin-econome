@@ -78,6 +78,7 @@ class ProfileActivity : AppCompatActivity() {
                     Toast.makeText(this, error, Toast.LENGTH_LONG).show()
                 } else {
                     SharedPrefManager.setLoggedIn(this, false) // Set login status to false
+                    Toast.makeText(this, "Logout successful", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, LoginActivity::class.java)
                     startActivity(intent)
                     finish()
