@@ -37,9 +37,6 @@
             android:name=".activity.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.AddIncomeActivity"
-            android:exported="false" />
-        <activity
             android:name=".activity.ProfileActivity"
             android:exported="false" />
         <activity
