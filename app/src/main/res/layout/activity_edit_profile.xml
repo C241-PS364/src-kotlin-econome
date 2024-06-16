@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="16dp"
-            android:text="Edit Profile"
+            android:text="@string/editpage"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="20sp"
@@ -52,31 +52,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:hint="@string/email"
+            android:hint="@string/editemail"
             android:inputType="textAutoComplete"
-            android:saveEnabled="true" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/password"
-        style="@style/MyTextInputLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/email"
-        app:startIconDrawable="@drawable/ic_baseline_lock_24">
-
-        <com.dicoding.econome.util.PasswordEditText
-            android:id="@+id/passInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:hint="@string/password"
-            android:inputType="textPassword"
             android:saveEnabled="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -90,14 +67,14 @@
         android:paddingEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password"
+        app:layout_constraintTop_toBottomOf="@+id/email"
         app:startIconDrawable="@drawable/ic_baseline_person_24">
 
         <com.dicoding.econome.util.NameEditText
             android:id="@+id/textInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/name"
+            android:hint="@string/editname"
             android:inputType="textAutoComplete"
             android:saveEnabled="true" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -121,7 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:inputType="none"
-            android:hint="@string/gender"
+            android:hint="@string/editgender"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -142,7 +119,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:inputType="none"
-            android:hint="@string/major"
+            android:hint="@string/editmajor"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -164,7 +141,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:hint="@string/age"
+            android:hint="@string/editage"
             android:inputType="number"
             android:saveEnabled="true" />
     </com.google.android.material.textfield.TextInputLayout>

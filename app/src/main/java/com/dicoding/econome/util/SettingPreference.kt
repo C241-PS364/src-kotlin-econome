@@ -9,6 +9,7 @@ import com.dicoding.econome.auth.UserResponse.ProfileData
 import com.dicoding.econome.auth.UserResponse.UpdateProfileRequest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.sql.Timestamp
 
 class SettingPreference private constructor(private val dataStore: DataStore<Preferences>) {
 
@@ -19,8 +20,13 @@ class SettingPreference private constructor(private val dataStore: DataStore<Pre
     private val GENDER = stringPreferencesKey("gender")
     private val MAJOR = stringPreferencesKey("major")
     private val AGE = stringPreferencesKey("age")
+    private val CREATED_AT = stringPreferencesKey("created_at")
+    private val UPDATED_AT = stringPreferencesKey("updated_at")
     private val STATUS = booleanPreferencesKey("status")
 
+    fun String.toTimestamp(): Timestamp {
+        return Timestamp.valueOf(this)
+    }
     fun getUserData(): Flow<ProfileData> {
         return dataStore.data.map { preferences ->
             ProfileData(
@@ -30,10 +36,10 @@ class SettingPreference private constructor(private val dataStore: DataStore<Pre
                 username = preferences[USERNAME] ?: "",
                 gender = preferences[GENDER] ?: "",
                 major = preferences[MAJOR] ?: "",
-                age = preferences[AGE]?: "",
-                token = preferences[TOKEN] ?: "", // Add this line
-                created_at = "",
-                updated_at = ""
+                age = preferences[AGE]?.toInt() ?: 0,
+                created_at = preferences[CREATED_AT]?.toTimestamp() ?: Timestamp(0),
+                updated_at = preferences[UPDATED_AT] ?.toTimestamp() ?: Timestamp(0),
+                token = preferences[TOKEN] ?: "",
             )
         }
     }
