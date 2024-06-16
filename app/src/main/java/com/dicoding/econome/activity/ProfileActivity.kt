@@ -20,6 +20,10 @@ class ProfileActivity : AppCompatActivity() {
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.editprofile.setOnClickListener {
+            startActivity(Intent(this@ProfileActivity, EditProfileActivity::class.java))
+        }
+
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
         val menu = bottomNavigationView.menu
