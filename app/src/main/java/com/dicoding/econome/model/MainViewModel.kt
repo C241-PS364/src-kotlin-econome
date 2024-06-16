@@ -18,6 +18,20 @@ class MainViewModel(private val context: Context, private val repository: Reposi
     private val _registerResponse = MutableLiveData<Result<AuthResponses.RegisterResponse>>()
     val registerResponse: LiveData<Result<AuthResponses.RegisterResponse>> = _registerResponse
 
+    private val _refreshTokenResponse = MutableLiveData<Result<AuthResponses.RefreshTokenResponse>>()
+    val refreshTokenResponse: LiveData<Result<AuthResponses.RefreshTokenResponse>> = _refreshTokenResponse
+
+    fun refreshToken(refreshToken: String) {
+        _refreshTokenResponse.value = Result.Loading
+        repository.refreshToken(context, refreshToken) { response, error ->
+            if (error != null || response == null) {
+                _refreshTokenResponse.postValue(Result.Error(error ?: "Unknown error"))
+            } else {
+                _refreshTokenResponse.postValue(Result.Success(response))
+            }
+        }
+    }
+
     fun login(username: String, pass: String) {
         _loginResponse.value = Result.Loading
         repository.login(context, username, pass) { response, error ->

@@ -14,6 +14,7 @@ import com.dicoding.econome.databinding.ActivitySplashBinding
 import com.dicoding.econome.model.SettingFactory
 import com.dicoding.econome.model.SettingViewModel
 import com.dicoding.econome.util.SettingPreference
+import com.dicoding.econome.util.SharedPrefManager
 
 class SplashActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySplashBinding
@@ -33,7 +34,7 @@ class SplashActivity : AppCompatActivity() {
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
         Handler(Looper.getMainLooper()).postDelayed({
-            if (!isLogin) {
+            if (SharedPrefManager.isLoggedIn(this)) {
                 val intent = Intent(this@SplashActivity, MainActivity::class.java)
                 startActivity(intent)
             } else {

@@ -3,6 +3,7 @@ package com.dicoding.econome.activity
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -92,7 +93,7 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun register(
+    fun register(
         username: String,
         pass: String,
         name: String,
@@ -136,12 +137,21 @@ class RegisterActivity : AppCompatActivity() {
                                 ).show()
                             }
                         } else {
-                            cancel()
-                            Toast.makeText(
-                                this@RegisterActivity,
-                                registerResponse.message,
-                                Toast.LENGTH_LONG
-                            ).show()
+                            // If the error message indicates that the token has expired
+                            if (registerResponse.message == "Auth token expired") {
+                                // Get the saved refresh token from SharedPreferences
+                                val sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE)
+                                val savedRefreshToken = sharedPreferences.getString("refreshToken", null)
+                                // Call the refreshToken function
+                                mainViewModel.refreshToken(savedRefreshToken ?: "")
+                            } else {
+                                cancel()
+                                Toast.makeText(
+                                    this@RegisterActivity,
+                                    registerResponse.message,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
                         }
                     }
 

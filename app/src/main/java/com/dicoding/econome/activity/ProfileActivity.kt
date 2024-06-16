@@ -2,23 +2,42 @@ package com.dicoding.econome.activity
 
 import android.app.ActivityOptions
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.RelativeSizeSpan
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.dicoding.econome.R
+import com.dicoding.econome.auth.ApiConfig
+import com.dicoding.econome.database.AppDatabase
 import com.dicoding.econome.databinding.ActivityProfileBinding
+import com.dicoding.econome.util.Repository
+import com.dicoding.econome.util.SharedPrefManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProfileBinding
+    private lateinit var repository: Repository
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Initialize the repository
+        val authService = ApiConfig.api
+        val database = AppDatabase.getDatabase(this) // Replace with the actual method to get your AppDatabase instance
+
+        repository = Repository(authService, database)
+
+        if (!SharedPrefManager.isLoggedIn(this)) {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         binding.editprofile.setOnClickListener {
             startActivity(Intent(this@ProfileActivity, EditProfileActivity::class.java))
@@ -38,6 +57,19 @@ class ProfileActivity : AppCompatActivity() {
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
             menuItem.title = spannableString
+        }
+
+        binding.logout.setOnClickListener {
+            repository.logout(this) { error ->
+                if (error != null) {
+                    Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+                } else {
+                    SharedPrefManager.setLoggedIn(this, false) // Set login status to false
+                    val intent = Intent(this, LoginActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                }
+            }
         }
 
         binding.bottomNavigationView.selectedItemId = R.id.miProfile
@@ -69,6 +101,19 @@ class ProfileActivity : AppCompatActivity() {
         binding.addTransactionFAB.setOnClickListener {
             val intent = Intent(this, AddTransactionActivity::class.java)
             startActivity(intent)
+        }
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("Login Status", "Is logged in: ${SharedPrefManager.isLoggedIn(this)}")
+
+        if (!SharedPrefManager.isLoggedIn(this)) {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 }

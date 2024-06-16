@@ -28,10 +28,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.WelcomeActivity"
+            android:name=".activity.LoginActivity"
+            android:noHistory="true"
             android:exported="false" />
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.WelcomeActivity"
+            android:noHistory="true"
             android:exported="false" />
         <activity
             android:name=".activity.RegisterActivity"

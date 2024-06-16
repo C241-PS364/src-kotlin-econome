@@ -25,6 +25,7 @@ import com.dicoding.econome.model.SettingViewModel
 import com.dicoding.econome.model.ViewModelFactory
 import com.dicoding.econome.response.Result
 import com.dicoding.econome.util.SettingPreference
+import com.dicoding.econome.util.SharedPrefManager
 import com.github.mikephil.charting.BuildConfig
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
@@ -106,6 +107,7 @@ class LoginActivity : AppCompatActivity() {
                                 resources.getString(R.string.login),
                                 Toast.LENGTH_SHORT
                             ).show()
+                            SharedPrefManager.setLoggedIn(this@LoginActivity, true) // Set login status to true
                             startActivity(i)
                         } else {
                             cancel()
