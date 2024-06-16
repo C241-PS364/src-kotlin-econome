@@ -29,14 +29,27 @@ class ProfileActivity : AppCompatActivity() {
 
         // Initialize the repository
         val authService = ApiConfig.api
+        val userService = ApiConfig.userService
         val database = AppDatabase.getDatabase(this) // Replace with the actual method to get your AppDatabase instance
 
-        repository = Repository(authService, database)
+        repository = Repository(authService,userService, database)
 
         if (!SharedPrefManager.isLoggedIn(this)) {
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
+        }
+
+        repository.getProfile(this) { profileResponse, error ->
+            if (error != null) {
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+            } else {
+                binding.email.text = profileResponse?.data?.username
+                binding.name.text = profileResponse?.data?.name
+                binding.gender.text = profileResponse?.data?.gender
+                binding.major.text = profileResponse?.data?.major
+                binding.age.text = profileResponse?.data?.age.toString()
+            }
         }
 
         binding.editprofile.setOnClickListener {

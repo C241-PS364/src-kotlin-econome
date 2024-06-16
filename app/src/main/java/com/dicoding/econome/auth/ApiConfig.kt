@@ -2,6 +2,7 @@ package com.dicoding.econome.auth
 
 import com.dicoding.econome.expense.ExpenseService
 import com.dicoding.econome.income.IncomeService
+import com.dicoding.econome.user.UserService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -36,5 +37,9 @@ object ApiConfig {
 
     val expenseService: ExpenseService by lazy {
         retrofit.create(ExpenseService::class.java)
+    }
+
+    val userService: UserService by lazy {
+        retrofit.create(UserService::class.java)
     }
 }

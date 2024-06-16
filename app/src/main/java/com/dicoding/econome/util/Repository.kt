@@ -6,11 +6,17 @@ import com.dicoding.econome.auth.AuthRequests
 import com.dicoding.econome.auth.AuthResponses
 import com.dicoding.econome.auth.AuthService
 import com.dicoding.econome.database.AppDatabase
+import com.dicoding.econome.user.ProfileResponse
+import com.dicoding.econome.user.UserService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class Repository(private val authService: AuthService, private val database: AppDatabase) {
+class Repository(
+    private val authService: AuthService,
+    private val userService: UserService,
+    private val database: AppDatabase
+) {
 
     fun refreshToken(
         context: Context,
@@ -130,27 +136,57 @@ class Repository(private val authService: AuthService, private val database: App
         val token = sharedPreferences.getString("token", null)
 
         if (token != null) {
-            authService.logout("Bearer $token").enqueue(object : Callback<AuthResponses.LogoutResponse> {
-                override fun onResponse(call: Call<AuthResponses.LogoutResponse>, response: Response<AuthResponses.LogoutResponse>) {
-                    if (response.isSuccessful) {
-                        // Clear the token from SharedPreferences
-                        val editor = sharedPreferences.edit()
-                        editor.remove("token")
-                        editor.remove("refreshToken")
-                        editor.apply()
+            authService.logout("Bearer $token")
+                .enqueue(object : Callback<AuthResponses.LogoutResponse> {
+                    override fun onResponse(
+                        call: Call<AuthResponses.LogoutResponse>,
+                        response: Response<AuthResponses.LogoutResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            // Clear the token from SharedPreferences
+                            val editor = sharedPreferences.edit()
+                            editor.remove("token")
+                            editor.remove("refreshToken")
+                            editor.apply()
 
-                        callback(null)
+                            callback(null)
+                        } else {
+                            callback("Logout failed")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<AuthResponses.LogoutResponse>, t: Throwable) {
+                        callback(t.message)
+                    }
+                })
+        } else {
+            callback("No token found")
+        }
+    }
+
+    fun getProfile(
+        context: Context,
+        callback: (ProfileResponse?, String?) -> Unit
+    ) {
+        val sharedPreferences = context.getSharedPreferences("UserData", Context.MODE_PRIVATE)
+        val token = sharedPreferences.getString("token", null)
+
+        if (token != null) {
+            userService.getProfile("Bearer $token").enqueue(object : Callback<ProfileResponse> {
+                override fun onResponse(call: Call<ProfileResponse>, response: Response<ProfileResponse>) {
+                    if (response.isSuccessful) {
+                        callback(response.body(), null)
                     } else {
-                        callback("Logout failed")
+                        callback(null, "Failed to fetch profile")
                     }
                 }
 
-                override fun onFailure(call: Call<AuthResponses.LogoutResponse>, t: Throwable) {
-                    callback(t.message)
+                override fun onFailure(call: Call<ProfileResponse>, t: Throwable) {
+                    callback(null, t.message)
                 }
             })
         } else {
-            callback("No token found")
+            callback(null, "No token found")
         }
     }
 }
