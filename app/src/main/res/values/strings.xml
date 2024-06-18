@@ -65,6 +65,7 @@
     <string name="login">Login successful</string>
     <string name="regist">Registration successful</string>
     <string name="update">Update</string>
+    <string name="cancel">Cancel</string>
     <string name="transaction">Transaction</string>
     <string name="statistics_title">Statistics</string>
     <string name="greeting">Hello, User!</string>

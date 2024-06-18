@@ -159,4 +159,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/age" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancel"
+        android:layout_width="300dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="30dp"
+        android:backgroundTint="@color/red"
+        android:text="@string/cancel"
+        android:textSize="18sp"
+        app:cornerRadius="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSave" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,4 +18,5 @@ interface AuthService {
 
     @POST("auth/logout")
     fun logout(@Header("Authorization") token: String): Call<AuthResponses.LogoutResponse>
+
 }

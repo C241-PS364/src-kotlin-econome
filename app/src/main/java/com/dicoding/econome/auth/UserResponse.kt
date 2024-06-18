@@ -23,11 +23,11 @@ class UserResponse {
     )
 
     data class UpdateProfileRequest(
-        @SerializedName("name") val name: String,
-        @SerializedName("username") val username: String,
-        @SerializedName("gender") val gender: String,
-        @SerializedName("major") val major: String,
-        @SerializedName("age") val age: Int,
+        val username: String,
+        val name: String,
+        val gender: String,
+        val major: String,
+        val age: Int
     )
 
     data class UpdateProfileResponse(

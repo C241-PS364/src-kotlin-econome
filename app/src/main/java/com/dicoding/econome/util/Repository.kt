@@ -5,6 +5,7 @@ import android.util.Log
 import com.dicoding.econome.auth.AuthRequests
 import com.dicoding.econome.auth.AuthResponses
 import com.dicoding.econome.auth.AuthService
+import com.dicoding.econome.auth.UserResponse
 import com.dicoding.econome.database.AppDatabase
 import com.dicoding.econome.user.ProfileResponse
 import com.dicoding.econome.user.UserService
@@ -185,6 +186,43 @@ class Repository(
                     callback(null, t.message)
                 }
             })
+        } else {
+            callback(null, "No token found")
+        }
+    }
+
+    fun updateProfile(
+        context: Context,
+        username: String,
+        name: String,
+        gender: String,
+        major: String,
+        age: Int,
+        callback: (UserResponse.UpdateProfileResponse?, String?) -> Unit
+    ) {
+        val sharedPreferences = context.getSharedPreferences("UserData", Context.MODE_PRIVATE)
+        val token = sharedPreferences.getString("token", null)
+
+        if (token != null) {
+            val updateRequest = UserResponse.UpdateProfileRequest(username, name, gender, major, age)
+
+            userService.updateProfile("Bearer $token", updateRequest)
+                .enqueue(object : Callback<UserResponse.UpdateProfileResponse> {
+                    override fun onResponse(
+                        call: Call<UserResponse.UpdateProfileResponse>,
+                        response: Response<UserResponse.UpdateProfileResponse>
+                    ) {
+                        if (response.isSuccessful && response.body() != null) {
+                            callback(response.body(), null)
+                        } else {
+                            callback(null, "Update failed")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<UserResponse.UpdateProfileResponse>, t: Throwable) {
+                        callback(null, t.message)
+                    }
+                })
         } else {
             callback(null, "No token found")
         }

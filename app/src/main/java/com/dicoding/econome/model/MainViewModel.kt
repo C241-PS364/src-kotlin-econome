@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.dicoding.econome.auth.AuthResponses
+import com.dicoding.econome.auth.UserResponse
 import com.dicoding.econome.response.Result
 import com.dicoding.econome.util.Injection
 import com.dicoding.econome.util.Repository
@@ -17,6 +18,9 @@ class MainViewModel(private val context: Context, private val repository: Reposi
 
     private val _registerResponse = MutableLiveData<Result<AuthResponses.RegisterResponse>>()
     val registerResponse: LiveData<Result<AuthResponses.RegisterResponse>> = _registerResponse
+
+    private val _updateResponse = MutableLiveData<Result<UserResponse.UpdateProfileResponse>>()
+    val updateResponse: LiveData<Result<UserResponse.UpdateProfileResponse>> = _updateResponse
 
     private val _refreshTokenResponse = MutableLiveData<Result<AuthResponses.RefreshTokenResponse>>()
     val refreshTokenResponse: LiveData<Result<AuthResponses.RefreshTokenResponse>> = _refreshTokenResponse
@@ -57,6 +61,23 @@ class MainViewModel(private val context: Context, private val repository: Reposi
                 _registerResponse.postValue(Result.Error(error ?: "Unknown error"))
             } else {
                 _registerResponse.postValue(Result.Success(response))
+            }
+        }
+    }
+    fun update(
+        context: Context,
+        username:String,
+        name: String,
+        gender: String,
+        major: String,
+        age: Int
+    ) {
+        _updateResponse.value = Result.Loading
+        repository.updateProfile(context, username, name, gender, major, age) { response, error ->
+            if (error != null || response == null) {
+                _updateResponse.postValue(Result.Error(error ?: "Unknown error"))
+            } else {
+                _updateResponse.postValue(Result.Success(response))
             }
         }
     }
