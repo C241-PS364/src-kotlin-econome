@@ -121,7 +121,7 @@ class LoginActivity : AppCompatActivity() {
 
                     is Result.Error -> {
                         cancel()
-                        Toast.makeText(this@LoginActivity, result.error, Toast.LENGTH_LONG)
+                        Toast.makeText(this@LoginActivity, result.error, Toast.LENGTH_SHORT)
                             .show()
                     }
                 }

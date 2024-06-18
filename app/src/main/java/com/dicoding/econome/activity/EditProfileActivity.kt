@@ -53,7 +53,6 @@ class EditProfileActivity : AppCompatActivity() {
         binding.majorInput.setAdapter(majorAdapter)
 
         binding.apply {
-
             btnSave.setOnClickListener {
                 val username = usernameInput.text.toString()
                 val name = textInput.text.toString()
@@ -79,7 +78,7 @@ class EditProfileActivity : AppCompatActivity() {
                     else -> {
                         val age = ageStr.toIntOrNull()
                         if (age != null) {
-                            updateProfile(context, username, name, gender, major, age)
+                            updateProfile(this@EditProfileActivity, username, name, gender, major, age)
                         } else {
                             ageInput.error = resources.getString(R.string.invalidage)
                         }
