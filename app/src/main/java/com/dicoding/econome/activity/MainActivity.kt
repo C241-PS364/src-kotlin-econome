@@ -9,8 +9,10 @@ import android.text.SpannableString
 import android.text.style.RelativeSizeSpan
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
 import com.dicoding.econome.R
+import com.dicoding.econome.auth.ApiConfig
 import com.dicoding.econome.database.AppDatabase
 import com.dicoding.econome.database.entity.Transaction
 import com.dicoding.econome.databinding.ActivityMainBinding
@@ -20,8 +22,10 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -78,6 +82,7 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
+
         binding.bottomNavigationView.background = null
         binding.bottomNavigationView.menu.getItem(2).isEnabled = false
         binding.bottomNavigationView.itemIconTintList =
@@ -106,8 +111,39 @@ class MainActivity : AppCompatActivity() {
                 updateTimeRange()
             }
         }
-
+        fetchUserProfile()
         fetchAll()
+
+    }
+
+    private fun fetchUserProfile() {
+        // Ambil token dari SharedPreferences
+        val sharedPreferences = getSharedPreferences("UserData", MODE_PRIVATE)
+        val token = sharedPreferences.getString("token", null)
+
+        if (token != null) {
+            val userService = ApiConfig.userService
+
+            lifecycleScope.launch {
+                val response = withContext(Dispatchers.IO) {
+                    userService.getProfile("Bearer $token").execute()
+                }
+                if (response.isSuccessful) {
+                    val profile = response.body()?.data
+                    profile?.let {
+                        updateGreeting(it.name)
+                    }
+                }
+            }
+        } else {
+            // Handle case where token is not found
+            updateGreeting("User")
+        }
+    }
+
+    private fun updateGreeting(userName: String) {
+        val greetingText = getString(R.string.greeting, userName)
+        binding.tvGreeting.text = greetingText
     }
 
     override fun onResume() {

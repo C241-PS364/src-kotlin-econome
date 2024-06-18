@@ -68,10 +68,11 @@
     <string name="cancel">Cancel</string>
     <string name="transaction">Transaction</string>
     <string name="statistics_title">Statistics</string>
-    <string name="greeting">Hello, User!</string>
+    <string name="greeting">Hi, %1$s!</string>
     <string name="null_handling_message">No transactions yet</string>
     <string name="username">Enter your username</string>
     <string name="emptyusername">Please enter a username</string>
+
 
 
     <string-array name="time_range">
