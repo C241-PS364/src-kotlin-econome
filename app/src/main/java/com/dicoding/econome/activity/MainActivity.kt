@@ -156,13 +156,13 @@ class MainActivity : AppCompatActivity() {
         val filteredTransactions = when (timeRanges[currentRangeIndex]) {
             "Last 7 Days" -> transactions.filter {
                 val transactionDate =
-                    LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                    LocalDate.parse(it.date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                 ChronoUnit.DAYS.between(transactionDate, LocalDate.now()) <= 7
             }
 
             "Last 30 Days" -> transactions.filter {
                 val transactionDate =
-                    LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                    LocalDate.parse(it.date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                 ChronoUnit.DAYS.between(transactionDate, LocalDate.now()) <= 30
             }
 

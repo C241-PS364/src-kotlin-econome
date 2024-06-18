@@ -103,13 +103,13 @@ class TopSpendingDetailsActivity : AppCompatActivity() {
             "All Time" -> allTransactions
             "Last 7 Days" -> allTransactions.filter {
                 val transactionDate =
-                    LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                    LocalDate.parse(it.date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                 ChronoUnit.DAYS.between(transactionDate, currentDate) <= 7
             }
 
             "Last 30 Days" -> allTransactions.filter {
                 val transactionDate =
-                    LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                    LocalDate.parse(it.date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                 ChronoUnit.DAYS.between(transactionDate, currentDate) <= 30
             }
 
