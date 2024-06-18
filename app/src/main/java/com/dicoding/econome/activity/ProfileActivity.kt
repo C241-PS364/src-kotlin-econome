@@ -136,6 +136,7 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         // Do nothing on back press
     }
