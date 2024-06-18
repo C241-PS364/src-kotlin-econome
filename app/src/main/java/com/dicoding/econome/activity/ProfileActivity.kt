@@ -32,12 +32,10 @@ class ProfileActivity : AppCompatActivity() {
         val userService = ApiConfig.userService
         val database = AppDatabase.getDatabase(this) // Replace with the actual method to get your AppDatabase instance
 
-        repository = Repository(authService,userService, database)
+        repository = Repository(authService, userService, database)
 
         if (!SharedPrefManager.isLoggedIn(this)) {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
+            navigateToLogin()
         }
 
         repository.getProfile(this) { profileResponse, error ->
@@ -56,8 +54,33 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(Intent(this@ProfileActivity, EditProfileActivity::class.java))
         }
 
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        setupBottomNavigationView()
+        setupLogoutButton()
 
+        binding.addTransactionFAB.setOnClickListener {
+            val intent = Intent(this, AddTransactionActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("Login Status", "Is logged in: ${SharedPrefManager.isLoggedIn(this)}")
+
+        if (!SharedPrefManager.isLoggedIn(this)) {
+            navigateToLogin()
+        }
+    }
+
+    private fun navigateToLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun setupBottomNavigationView() {
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         val menu = bottomNavigationView.menu
         for (i in 0 until menu.size()) {
             val menuItem = menu.getItem(i)
@@ -70,20 +93,6 @@ class ProfileActivity : AppCompatActivity() {
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
             menuItem.title = spannableString
-        }
-
-        binding.logout.setOnClickListener {
-            repository.logout(this) { error ->
-                if (error != null) {
-                    Toast.makeText(this, error, Toast.LENGTH_LONG).show()
-                } else {
-                    SharedPrefManager.setLoggedIn(this, false) // Set login status to false
-                    Toast.makeText(this, "Logout successful", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, LoginActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
-            }
         }
 
         binding.bottomNavigationView.selectedItemId = R.id.miProfile
@@ -111,23 +120,23 @@ class ProfileActivity : AppCompatActivity() {
             ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
         binding.bottomNavigationView.itemTextColor =
             ContextCompat.getColorStateList(this, R.color.bottom_nav_item_color)
-
-        binding.addTransactionFAB.setOnClickListener {
-            val intent = Intent(this, AddTransactionActivity::class.java)
-            startActivity(intent)
-        }
-
-
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.d("Login Status", "Is logged in: ${SharedPrefManager.isLoggedIn(this)}")
-
-        if (!SharedPrefManager.isLoggedIn(this)) {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
+    private fun setupLogoutButton() {
+        binding.logout.setOnClickListener {
+            repository.logout(this) { error ->
+                if (error != null) {
+                    Toast.makeText(this, error, Toast.LENGTH_LONG).show()
+                } else {
+                    SharedPrefManager.setLoggedIn(this, false) // Set login status to false
+                    Toast.makeText(this, "Logout successful", Toast.LENGTH_SHORT).show()
+                    navigateToLogin()
+                }
+            }
         }
+    }
+
+    override fun onBackPressed() {
+        // Do nothing on back press
     }
 }

@@ -9,8 +9,8 @@ class AuthResponses {
     )
 
     data class LoginResponse(
-        @SerializedName("error") val error: Boolean,
-        @SerializedName("message") val message: String,
+        val error: Boolean,
+        val message: String,
         @SerializedName("data") val data: UserData
     )
 
