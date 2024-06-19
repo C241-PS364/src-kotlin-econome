@@ -27,6 +27,7 @@ class SettingPreference private constructor(private val dataStore: DataStore<Pre
     fun String.toTimestamp(): Timestamp {
         return Timestamp.valueOf(this)
     }
+
     fun getUserData(): Flow<ProfileData> {
         return dataStore.data.map { preferences ->
             ProfileData(
@@ -38,7 +39,7 @@ class SettingPreference private constructor(private val dataStore: DataStore<Pre
                 major = preferences[MAJOR] ?: "",
                 age = preferences[AGE]?.toInt() ?: 0,
                 created_at = preferences[CREATED_AT]?.toTimestamp() ?: Timestamp(0),
-                updated_at = preferences[UPDATED_AT] ?.toTimestamp() ?: Timestamp(0),
+                updated_at = preferences[UPDATED_AT]?.toTimestamp() ?: Timestamp(0),
                 token = preferences[TOKEN] ?: "",
             )
         }

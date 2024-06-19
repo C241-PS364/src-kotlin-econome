@@ -196,7 +196,8 @@ class AddTransactionActivity : AppCompatActivity() {
                                 insert(transaction)
                             } else {
                                 Log.d("Expense", "Failed to add expense: $error")
-                                Toast.makeText(this, "Failed to add expense", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this, "Failed to add expense", Toast.LENGTH_SHORT)
+                                    .show()
                             }
                         }
                     } else {

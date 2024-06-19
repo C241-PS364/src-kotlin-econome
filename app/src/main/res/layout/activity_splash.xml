@@ -9,16 +9,16 @@
     tools:context=".activity.SplashActivity">
 
 
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="500dp"
-            android:layout_height="500dp"
-            android:elevation="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/sec_logo" />
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="500dp"
+        android:layout_height="500dp"
+        android:elevation="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/sec_logo" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

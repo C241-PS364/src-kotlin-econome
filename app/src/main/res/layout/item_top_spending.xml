@@ -66,7 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Total Expense\n Rp 10000"
+            android:text="Total Expense\n Rp10000"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="14sp" />

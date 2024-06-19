@@ -38,7 +38,8 @@ class EditProfileActivity : AppCompatActivity() {
             val i = Intent(this, ProfileActivity::class.java)
             startActivity(
                 i,
-                ActivityOptionsCompat.makeSceneTransitionAnimation(this@EditProfileActivity).toBundle()
+                ActivityOptionsCompat.makeSceneTransitionAnimation(this@EditProfileActivity)
+                    .toBundle()
             )
         }
 
@@ -62,22 +63,34 @@ class EditProfileActivity : AppCompatActivity() {
                     username.isEmpty() -> {
                         usernameInput.error = resources.getString(R.string.emptymail)
                     }
+
                     name.isEmpty() -> {
                         textInput.error = resources.getString(R.string.emptyname)
                     }
+
                     gender.isEmpty() -> {
                         genderInput.error = resources.getString(R.string.emptygender)
                     }
+
                     major.isEmpty() -> {
                         majorInput.error = resources.getString(R.string.emptymajor)
                     }
+
                     ageStr.isEmpty() -> {
                         ageInput.error = resources.getString(R.string.emptyage)
                     }
+
                     else -> {
                         val age = ageStr.toIntOrNull()
                         if (age != null) {
-                            updateProfile(this@EditProfileActivity, username, name, gender, major, age)
+                            updateProfile(
+                                this@EditProfileActivity,
+                                username,
+                                name,
+                                gender,
+                                major,
+                                age
+                            )
                         } else {
                             ageInput.error = resources.getString(R.string.invalidage)
                         }
@@ -117,8 +130,10 @@ class EditProfileActivity : AppCompatActivity() {
                         if (!updateProfileResponse.error) {
                             if (updateProfileResponse.message == "Auth token expired") {
                                 // Get the saved refresh token from SharedPreferences
-                                val sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE)
-                                val savedRefreshToken = sharedPreferences.getString("refreshToken", null)
+                                val sharedPreferences =
+                                    getSharedPreferences("UserData", Context.MODE_PRIVATE)
+                                val savedRefreshToken =
+                                    sharedPreferences.getString("refreshToken", null)
                                 // Call the refreshToken function
                                 mainViewModel.refreshToken(savedRefreshToken ?: "")
                             } else {
@@ -128,7 +143,8 @@ class EditProfileActivity : AppCompatActivity() {
                                     updateProfileResponse.message,
                                     Toast.LENGTH_LONG
                                 ).show()
-                                val intent = Intent(this@EditProfileActivity, ProfileActivity::class.java)
+                                val intent =
+                                    Intent(this@EditProfileActivity, ProfileActivity::class.java)
                                 startActivity(intent)
                                 finish()
                             }

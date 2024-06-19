@@ -11,8 +11,14 @@ import retrofit2.http.Path
 interface ExpenseService {
 
     @POST("expenses")
-    fun addExpense(@Header("Authorization") token: String, @Body request: ExpenseRequests.AddExpenseRequest): Call<ExpenseResponses.AddExpenseResponse>
+    fun addExpense(
+        @Header("Authorization") token: String,
+        @Body request: ExpenseRequests.AddExpenseRequest
+    ): Call<ExpenseResponses.AddExpenseResponse>
 
     @DELETE("expenses/{id}")
-    fun deleteExpense(@Header("Authorization") token: String, @Path("id") id: Int): Call<ExpenseResponses.DeleteExpenseResponse>
+    fun deleteExpense(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): Call<ExpenseResponses.DeleteExpenseResponse>
 }

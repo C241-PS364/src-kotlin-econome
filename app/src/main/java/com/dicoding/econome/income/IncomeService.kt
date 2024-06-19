@@ -10,8 +10,14 @@ import retrofit2.http.Path
 interface IncomeService {
 
     @POST("incomes")
-    fun addIncome(@Header("Authorization") token: String, @Body request: IncomeRequests.AddIncomeRequest): Call<IncomeResponses.AddIncomeResponse>
+    fun addIncome(
+        @Header("Authorization") token: String,
+        @Body request: IncomeRequests.AddIncomeRequest
+    ): Call<IncomeResponses.AddIncomeResponse>
 
     @DELETE("incomes/{id}")
-    fun deleteIncome(@Header("Authorization") token: String, @Path("id") id: Int): Call<IncomeResponses.DeleteIncomeResponse>
+    fun deleteIncome(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): Call<IncomeResponses.DeleteIncomeResponse>
 }

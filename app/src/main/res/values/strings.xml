@@ -26,7 +26,7 @@
     <string name="profile">Profile</string>
     <string name="icon">Icon Category</string>
     <string name="item_count">%d items</string>
-    <string name="total_expense">Total Expense\n Rp %.0f</string>
+    <string name="total_expense">Total Expense\n Rp%.0f</string>
     <string name="top_spending">Top Spending</string>
     <string name="top_spending_details">Top Spending Details</string>
 
@@ -72,7 +72,6 @@
     <string name="null_handling_message">No transactions yet</string>
     <string name="username">Enter your username</string>
     <string name="emptyusername">Please enter a username</string>
-
 
 
     <string-array name="time_range">

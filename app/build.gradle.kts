@@ -53,7 +53,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation("com.github.bumptech.glide:glide:4.12.0")
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
     implementation("androidx.datastore:datastore-preferences:1.1.1")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
@@ -66,7 +66,7 @@ dependencies {
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
     implementation("com.jakewharton.timber:timber:4.7.1")
-    implementation ("joda-time:joda-time:2.10.13")
+    implementation("joda-time:joda-time:2.10.13")
 
     val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")

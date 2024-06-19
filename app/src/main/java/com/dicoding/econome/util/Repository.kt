@@ -7,6 +7,8 @@ import com.dicoding.econome.auth.AuthResponses
 import com.dicoding.econome.auth.AuthService
 import com.dicoding.econome.auth.UserResponse
 import com.dicoding.econome.database.AppDatabase
+import com.dicoding.econome.prediction.PredictionResponse
+import com.dicoding.econome.prediction.PredictionService
 import com.dicoding.econome.user.ProfileResponse
 import com.dicoding.econome.user.UserService
 import retrofit2.Call
@@ -16,6 +18,7 @@ import retrofit2.Response
 class Repository(
     private val authService: AuthService,
     private val userService: UserService,
+    private val predictionService: PredictionService,
     private val database: AppDatabase
 ) {
 
@@ -174,7 +177,10 @@ class Repository(
 
         if (token != null) {
             userService.getProfile("Bearer $token").enqueue(object : Callback<ProfileResponse> {
-                override fun onResponse(call: Call<ProfileResponse>, response: Response<ProfileResponse>) {
+                override fun onResponse(
+                    call: Call<ProfileResponse>,
+                    response: Response<ProfileResponse>
+                ) {
                     if (response.isSuccessful) {
                         callback(response.body(), null)
                     } else {
@@ -204,7 +210,8 @@ class Repository(
         val token = sharedPreferences.getString("token", null)
 
         if (token != null) {
-            val updateRequest = UserResponse.UpdateProfileRequest(username, name, gender, major, age)
+            val updateRequest =
+                UserResponse.UpdateProfileRequest(username, name, gender, major, age)
 
             userService.updateProfile("Bearer $token", updateRequest)
                 .enqueue(object : Callback<UserResponse.UpdateProfileResponse> {
@@ -219,7 +226,41 @@ class Repository(
                         }
                     }
 
-                    override fun onFailure(call: Call<UserResponse.UpdateProfileResponse>, t: Throwable) {
+                    override fun onFailure(
+                        call: Call<UserResponse.UpdateProfileResponse>,
+                        t: Throwable
+                    ) {
+                        callback(null, t.message)
+                    }
+                })
+        } else {
+            callback(null, "No token found")
+        }
+    }
+
+    fun getMonthlyExpensePrediction(
+        context: Context,
+        callback: (Float?, String?) -> Unit
+    ) {
+        val sharedPreferences = context.getSharedPreferences("UserData", Context.MODE_PRIVATE)
+        val token = sharedPreferences.getString("token", null)
+
+        if (token != null) {
+            predictionService.getMonthlyExpensePrediction("Bearer $token")
+                .enqueue(object : Callback<PredictionResponse> {
+                    override fun onResponse(
+                        call: Call<PredictionResponse>,
+                        response: Response<PredictionResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            val prediction = response.body()?.predictedExpense
+                            callback(prediction, null)
+                        } else {
+                            callback(null, "Failed to fetch prediction")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<PredictionResponse>, t: Throwable) {
                         callback(null, t.message)
                     }
                 })

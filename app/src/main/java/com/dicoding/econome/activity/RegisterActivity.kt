@@ -65,21 +65,27 @@ class RegisterActivity : AppCompatActivity() {
                     username.isEmpty() -> {
                         usernameInput.error = resources.getString(R.string.emptymail)
                     }
+
                     pass.isEmpty() -> {
                         passInput.error = resources.getString(R.string.emptypass)
                     }
+
                     name.isEmpty() -> {
                         textInput.error = resources.getString(R.string.emptyname)
                     }
+
                     gender.isEmpty() -> {
                         genderInput.error = resources.getString(R.string.emptygender)
                     }
+
                     major.isEmpty() -> {
                         majorInput.error = resources.getString(R.string.emptymajor)
                     }
+
                     ageStr.isEmpty() -> {
                         ageInput.error = resources.getString(R.string.emptyage)
                     }
+
                     else -> {
                         val age = ageStr.toIntOrNull()
                         if (age != null) {
@@ -140,8 +146,10 @@ class RegisterActivity : AppCompatActivity() {
                             // If the error message indicates that the token has expired
                             if (registerResponse.message == "Auth token expired") {
                                 // Get the saved refresh token from SharedPreferences
-                                val sharedPreferences = getSharedPreferences("UserData", Context.MODE_PRIVATE)
-                                val savedRefreshToken = sharedPreferences.getString("refreshToken", null)
+                                val sharedPreferences =
+                                    getSharedPreferences("UserData", Context.MODE_PRIVATE)
+                                val savedRefreshToken =
+                                    sharedPreferences.getString("refreshToken", null)
                                 // Call the refreshToken function
                                 mainViewModel.refreshToken(savedRefreshToken ?: "")
                             } else {

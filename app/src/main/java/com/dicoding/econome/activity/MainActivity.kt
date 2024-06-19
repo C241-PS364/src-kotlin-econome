@@ -3,10 +3,14 @@ package com.dicoding.econome.activity
 import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
+import android.text.style.StyleSpan
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -16,6 +20,7 @@ import com.dicoding.econome.auth.ApiConfig
 import com.dicoding.econome.database.AppDatabase
 import com.dicoding.econome.database.entity.Transaction
 import com.dicoding.econome.databinding.ActivityMainBinding
+import com.dicoding.econome.util.Repository
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -26,9 +31,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.DecimalFormat
+import java.text.NumberFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,6 +46,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var timeRanges: Array<String>
     private var currentRangeIndex = 0
+
+    private lateinit var repository: Repository
+    private lateinit var tvPrediction: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +73,40 @@ class MainActivity : AppCompatActivity() {
 
         db = Room.databaseBuilder(this, AppDatabase::class.java, "transactions")
             .build()
+
+        tvPrediction = findViewById(R.id.tvPrediction)
+        repository =
+            Repository(ApiConfig.api, ApiConfig.userService, ApiConfig.predictionService, db)
+
+        repository.getMonthlyExpensePrediction(this) { predictedExpense, error ->
+            if (predictedExpense != null) {
+                val formattedExpense = formatNumber(predictedExpense)
+                val expenseText =
+                    "Based on your spending habits, your predicted expense for next month is: \n\nRp$formattedExpense"
+                val spannableString = SpannableString(expenseText)
+                val start = expenseText.indexOf("Rp$formattedExpense")
+                val end = start + "Rp$formattedExpense".length
+                val colorPrimary = ContextCompat.getColor(this, R.color.colorPrimary)
+                spannableString.setSpan(
+                    ForegroundColorSpan(colorPrimary),
+                    start,
+                    end,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+
+                spannableString.setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    start,
+                    end,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+
+                tvPrediction.text = spannableString
+            } else {
+                tvPrediction.text =
+                    "Please add a transaction to start tracking your expenses and get future predictions."
+            }
+        }
 
         binding.bottomNavigationView.selectedItemId = R.id.miHome
 
@@ -289,14 +334,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun formatNumber(number: Float): String {
+        val numberFormat = NumberFormat.getNumberInstance(Locale.US) as DecimalFormat
+        val symbols = numberFormat.decimalFormatSymbols
+        symbols.groupingSeparator = '.'
+        numberFormat.decimalFormatSymbols = symbols
+        return numberFormat.format(number)
+    }
+
     private fun updateDashboard(filteredTransactions: List<Transaction>) {
         val balanceAmount = filteredTransactions.sumOf { it.amount }
         val incomeAmount = filteredTransactions.filter { it.amount > 0 }.sumOf { it.amount }
         val expenseAmount = filteredTransactions.filter { it.amount < 0 }.sumOf { -it.amount }
 
-        binding.tvBalanceAmount.text = "Rp %.0f".format(balanceAmount)
-        binding.tvIncomeAmount.text = "Rp %.0f".format(incomeAmount)
-        binding.tvExpenseAmount.text = "Rp %.0f".format(expenseAmount)
+        binding.tvBalanceAmount.text = "Rp${formatNumber(balanceAmount.toFloat())}"
+        binding.tvIncomeAmount.text = "Rp${formatNumber(incomeAmount.toFloat())}"
+        binding.tvExpenseAmount.text = "Rp${formatNumber(expenseAmount.toFloat())}"
 
         updateChart(filteredTransactions)
     }

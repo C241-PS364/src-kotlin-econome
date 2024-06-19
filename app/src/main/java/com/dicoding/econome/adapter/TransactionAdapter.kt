@@ -9,6 +9,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.dicoding.econome.R
 import com.dicoding.econome.database.entity.Transaction
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.util.Locale
 
 class TransactionAdapter(private var transactions: List<Transaction>) :
     RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
@@ -25,16 +28,24 @@ class TransactionAdapter(private var transactions: List<Transaction>) :
         return TransactionViewHolder(view)
     }
 
+    private fun formatNumber(number: Float): String {
+        val numberFormat = NumberFormat.getNumberInstance(Locale.US) as DecimalFormat
+        val symbols = numberFormat.decimalFormatSymbols
+        symbols.groupingSeparator = '.'
+        numberFormat.decimalFormatSymbols = symbols
+        return numberFormat.format(number)
+    }
+
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
         val transaction = transactions[position]
         val context = holder.amount.context
 
         if (transaction.amount >= 0) {
-            holder.amount.text = "+ Rp%.0f".format(transaction.amount)
+            holder.amount.text = "+ Rp${formatNumber(transaction.amount.toFloat())}"
             holder.amount.setTextColor(ContextCompat.getColor(context, R.color.green))
             holder.categoryIcon.setImageResource(R.drawable.ic_income_new) // Set icon to ic_money for income
         } else {
-            holder.amount.text = "- Rp%.0f".format(Math.abs(transaction.amount))
+            holder.amount.text = "- Rp${formatNumber(Math.abs(transaction.amount).toFloat())}"
             holder.amount.setTextColor(ContextCompat.getColor(context, R.color.red))
 
             val categoryIconRes = when (transaction.category) {

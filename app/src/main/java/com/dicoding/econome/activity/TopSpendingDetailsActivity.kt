@@ -32,7 +32,6 @@ class TopSpendingDetailsActivity : AppCompatActivity() {
         tvNoTransaction = findViewById(R.id.tvNoTransaction)
 
 
-
         val category = intent.getStringExtra("CATEGORY") ?: ""
 
         // Initialize the TabLayout
