@@ -40,8 +40,16 @@ Welcome to EconoMe, your personal expense tracker app on the Android platform. E
 
 - [![Kotlin][Kotlin.com]][Kotlin-url]
 - [![Android Studio][AndroidStudio.com]][AndroidStudio-url]
-- [![Firebase][Firebase.com]][Firebase-url]
+- [![Room Database][RoomDatabase.com]][RoomDatabase-url]
 - [![Material Design][MaterialDesign.com]][MaterialDesign-url]
+
+## Backend and Cloud Integration
+
+- **REST API:** Implemented a REST API for backend and mobile app integration.
+- **Monitoring Dashboard:** Created a monitoring dashboard.
+- **Hosting:** Utilized Google Cloud Run for hosting.
+- **Database Management:** Managed using PostgreSQL.
+- **Machine Learning Models:** Deployed machine learning models to enhance the application's predictive capabilities.
 
 ## Contribution
 
@@ -70,7 +78,7 @@ Thank you for choosing EconoMe to manage your finances. We hope EconoMe helps yo
 [Kotlin-url]: https://kotlinlang.org/
 [AndroidStudio.com]: https://img.shields.io/badge/Android%20Studio-3DDC84?style=for-the-badge&logo=android-studio&logoColor=white
 [AndroidStudio-url]: https://developer.android.com/studio
-[Firebase.com]: https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=white
-[Firebase-url]: https://firebase.google.com/
+[RoomDatabase.com]: https://img.shields.io/badge/Room%20Database-FF6F00?style=for-the-badge&logo=google&logoColor=white
+[RoomDatabase-url]: https://developer.android.com/training/data-storage/room
 [MaterialDesign.com]: https://img.shields.io/badge/Material%20Design-757575?style=for-the-badge&logo=material-design&logoColor=white
 [MaterialDesign-url]: https://material.io/
