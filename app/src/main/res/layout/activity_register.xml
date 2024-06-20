@@ -107,8 +107,8 @@
             android:id="@+id/genderInput"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="none"
             android:hint="@string/gender"
+            android:inputType="none"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -128,8 +128,8 @@
             android:id="@+id/majorInput"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="none"
             android:hint="@string/major"
+            android:inputType="none"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -198,10 +198,10 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:contentDescription="@string/app_name"
         android:layout_width="160dp"
         android:layout_height="80dp"
         android:layout_marginTop="20dp"
+        android:contentDescription="@string/app_name"
         app:layout_constraintBottom_toTopOf="@+id/sign"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.048"

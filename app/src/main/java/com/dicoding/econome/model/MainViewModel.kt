@@ -11,7 +11,8 @@ import com.dicoding.econome.response.Result
 import com.dicoding.econome.util.Injection
 import com.dicoding.econome.util.Repository
 
-class MainViewModel(private val context: Context, private val repository: Repository) : ViewModel() {
+class MainViewModel(private val context: Context, private val repository: Repository) :
+    ViewModel() {
 
     private val _loginResponse = MutableLiveData<Result<AuthResponses.LoginResponse>>()
     val loginResponse: LiveData<Result<AuthResponses.LoginResponse>> = _loginResponse
@@ -22,8 +23,10 @@ class MainViewModel(private val context: Context, private val repository: Reposi
     private val _updateResponse = MutableLiveData<Result<UserResponse.UpdateProfileResponse>>()
     val updateResponse: LiveData<Result<UserResponse.UpdateProfileResponse>> = _updateResponse
 
-    private val _refreshTokenResponse = MutableLiveData<Result<AuthResponses.RefreshTokenResponse>>()
-    val refreshTokenResponse: LiveData<Result<AuthResponses.RefreshTokenResponse>> = _refreshTokenResponse
+    private val _refreshTokenResponse =
+        MutableLiveData<Result<AuthResponses.RefreshTokenResponse>>()
+    val refreshTokenResponse: LiveData<Result<AuthResponses.RefreshTokenResponse>> =
+        _refreshTokenResponse
 
     fun refreshToken(refreshToken: String) {
         _refreshTokenResponse.value = Result.Loading
@@ -48,7 +51,7 @@ class MainViewModel(private val context: Context, private val repository: Reposi
     }
 
     fun register(
-        username:String,
+        username: String,
         pass: String,
         name: String,
         gender: String,
@@ -64,9 +67,10 @@ class MainViewModel(private val context: Context, private val repository: Reposi
             }
         }
     }
+
     fun update(
         context: Context,
-        username:String,
+        username: String,
         name: String,
         gender: String,
         major: String,

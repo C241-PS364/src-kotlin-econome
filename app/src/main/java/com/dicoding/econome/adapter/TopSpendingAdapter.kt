@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dicoding.econome.R
 import com.dicoding.econome.activity.TopSpendingDetailsActivity
 import com.dicoding.econome.model.TopSpending
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.util.Locale
 
 class TopSpendingAdapter(
     private val topSpendings: List<TopSpending>,
@@ -42,8 +45,15 @@ class TopSpendingAdapter(
             icon.setImageResource(topSpending.iconRes)
             category.text = topSpending.category
             itemCount.text = itemView.context.getString(R.string.item_count, topSpending.itemCount)
-            totalExpense.text =
-                itemView.context.getString(R.string.total_expense, topSpending.totalExpense)
+
+            // Format total expense
+            val numberFormat = NumberFormat.getNumberInstance(Locale.US) as DecimalFormat
+            val symbols = numberFormat.decimalFormatSymbols
+            symbols.groupingSeparator = '.'
+            numberFormat.decimalFormatSymbols = symbols
+            val formattedTotalExpense = numberFormat.format(topSpending.totalExpense)
+
+            totalExpense.text = "Total Expense\n Rp$formattedTotalExpense"
         }
 
         init {

@@ -6,7 +6,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class IncomeRepository(private val incomeService: IncomeService, private val database: AppDatabase) {
+class IncomeRepository(
+    private val incomeService: IncomeService,
+    private val database: AppDatabase
+) {
     fun addIncome(
         token: String,
         request: IncomeRequests.AddIncomeRequest,

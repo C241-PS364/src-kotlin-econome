@@ -8,7 +8,9 @@ object Injection {
     fun provideRepo(context: Context): Repository {
         val apiService = ApiConfig.api
         val userService = ApiConfig.userService
+        val predictionService = ApiConfig.predictionService
         val database = AppDatabase.getDatabase(context)
-        return Repository(apiService, userService, database)
+
+        return Repository(apiService, userService, predictionService, database)
     }
 }

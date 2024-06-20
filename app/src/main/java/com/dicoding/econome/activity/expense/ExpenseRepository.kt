@@ -7,7 +7,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ExpenseRepository(private val expenseService: ExpenseService, private val database: AppDatabase) {
+class ExpenseRepository(
+    private val expenseService: ExpenseService,
+    private val database: AppDatabase
+) {
     fun addExpense(
         token: String,
         request: ExpenseRequests.AddExpenseRequest,

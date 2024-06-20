@@ -30,9 +30,11 @@ class ProfileActivity : AppCompatActivity() {
         // Initialize the repository
         val authService = ApiConfig.api
         val userService = ApiConfig.userService
-        val database = AppDatabase.getDatabase(this) // Replace with the actual method to get your AppDatabase instance
+        val predictionService = ApiConfig.predictionService
+        val database =
+            AppDatabase.getDatabase(this) // Replace with the actual method to get your AppDatabase instance
 
-        repository = Repository(authService, userService, database)
+        repository = Repository(authService, userService, predictionService, database)
 
         if (!SharedPrefManager.isLoggedIn(this)) {
             navigateToLogin()

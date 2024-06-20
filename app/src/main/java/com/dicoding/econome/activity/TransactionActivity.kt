@@ -233,13 +233,13 @@ class TransactionActivity : AppCompatActivity() {
                 "All Time" -> allTransactions
                 "Last 7 Days" -> allTransactions.filter {
                     val transactionDate =
-                        LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                        LocalDate.parse(it.date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                     ChronoUnit.DAYS.between(transactionDate, currentDate) <= 7
                 }
 
                 "Last 30 Days" -> allTransactions.filter {
                     val transactionDate =
-                        LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                        LocalDate.parse(it.date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                     ChronoUnit.DAYS.between(transactionDate, currentDate) <= 30
                 }
 
@@ -300,7 +300,8 @@ class TransactionActivity : AppCompatActivity() {
 
             // Delete the income from the server
             if (transaction.amount > 0 && transaction.incomeId != null) { // Check if the transaction is an income and incomeId is not null
-                val sharedPreferences = getApplicationContext().getSharedPreferences("UserData", Context.MODE_PRIVATE)
+                val sharedPreferences =
+                    getApplicationContext().getSharedPreferences("UserData", Context.MODE_PRIVATE)
                 val token = sharedPreferences.getString("token", null)
                 if (token != null) {
                     val incomeService = ApiConfig.incomeService
@@ -323,7 +324,8 @@ class TransactionActivity : AppCompatActivity() {
 
             // Delete the expense from the server
             if (transaction.amount < 0 && transaction.expenseId != null) { // Check if the transaction is an expense and expenseId is not null
-                val sharedPreferences = getApplicationContext().getSharedPreferences("UserData", Context.MODE_PRIVATE)
+                val sharedPreferences =
+                    getApplicationContext().getSharedPreferences("UserData", Context.MODE_PRIVATE)
                 val token = sharedPreferences.getString("token", null)
                 if (token != null) {
                     val expenseService = ApiConfig.expenseService

@@ -107,7 +107,10 @@ class LoginActivity : AppCompatActivity() {
                                 resources.getString(R.string.login),
                                 Toast.LENGTH_SHORT
                             ).show()
-                            SharedPrefManager.setLoggedIn(this@LoginActivity, true) // Set login status to true
+                            SharedPrefManager.setLoggedIn(
+                                this@LoginActivity,
+                                true
+                            ) // Set login status to true
                             startActivity(i)
                         } else {
                             cancel()

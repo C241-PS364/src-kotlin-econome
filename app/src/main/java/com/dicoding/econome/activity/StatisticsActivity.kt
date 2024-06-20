@@ -4,7 +4,6 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.Spannable
@@ -36,9 +35,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.DecimalFormat
+import java.text.NumberFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.util.Locale
 import kotlin.math.abs
 
 class StatisticsActivity : AppCompatActivity() {
@@ -137,6 +139,14 @@ class StatisticsActivity : AppCompatActivity() {
         return sharedPreferences.getBoolean("isFirstTime", true)
     }
 
+    private fun formatNumber(number: Float): String {
+        val numberFormat = NumberFormat.getNumberInstance(Locale.US) as DecimalFormat
+        val symbols = numberFormat.decimalFormatSymbols
+        symbols.groupingSeparator = '.'
+        numberFormat.decimalFormatSymbols = symbols
+        return numberFormat.format(number)
+    }
+
     private fun fetchFiltered(timeRange: String) {
         if (isFirstTime()) {
             binding.progressBarPieChart.visibility = View.VISIBLE
@@ -154,13 +164,13 @@ class StatisticsActivity : AppCompatActivity() {
                 "All Time" -> allTransactions
                 "Last 7 Days" -> allTransactions.filter {
                     val transactionDate =
-                        LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                        LocalDate.parse(it.date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                     ChronoUnit.DAYS.between(transactionDate, currentDate) <= 7
                 }
 
                 "Last 30 Days" -> allTransactions.filter {
                     val transactionDate =
-                        LocalDate.parse(it.date, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+                        LocalDate.parse(it.date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
                     ChronoUnit.DAYS.between(transactionDate, currentDate) <= 30
                 }
 
@@ -262,9 +272,8 @@ class StatisticsActivity : AppCompatActivity() {
                 binding.pieChart.holeRadius = 50f
 
                 val totalExpense = expenseTransactions.sumOf { abs(it.amount) }
-                val formattedTotalExpense =
-                    if (totalExpense % 1 == 0.0) totalExpense.toInt() else totalExpense
-                val centerText = "<b>Expense</b><br>Rp $formattedTotalExpense"
+                val formattedTotalExpense = formatNumber(totalExpense.toFloat())
+                val centerText = "<b>Expense</b><br>Rp$formattedTotalExpense"
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                     binding.pieChart.centerText =
                         Html.fromHtml(centerText, Html.FROM_HTML_MODE_LEGACY)
